@@ -28,7 +28,6 @@ Neuron.prototype.connectNeuronTo = function ( neuronB ) {
 
 Neuron.prototype.createSignal = function ( particlePool, minSpeed, maxSpeed ) {
 
-	this.firedCount += 1;
 	this.receivedSignal = false;
 
 	var signals = [];
@@ -49,12 +48,16 @@ Neuron.prototype.createSignal = function ( particlePool, minSpeed, maxSpeed ) {
 					var c = new Signal( particlePool, minSpeed, maxSpeed );
 					c.setConnection( this.connection[ i ] );
 					signals.push( c );
+					this.firedCount += 1;
+
 				}
 
-			}else{
+			}else{  // initial release
 					var c = new Signal( particlePool, minSpeed, maxSpeed );
 					c.setConnection( this.connection[ i ] );
 					signals.push( c );
+					this.firedCount += 1;
+
 			}
 		
 		}
@@ -601,7 +604,7 @@ NeuralNetwork.prototype.update = function ( deltaTime ) {
 		if ( this.components.allSignals.length < this.settings.currentMaxSignals - this.settings.maxConnectionsPerNeuron ) { // limit total signals currentMaxSignals - maxConnectionsPerNeuron because allSignals can not bigger than particlePool size
 
 			if ( n.receivedSignal && n.firedCount < 8 ) { // Traversal mode
-				// if (n.receivedSignal && (currentTime - n.lastSignalRelease > n.releaseDelay) && n.firedCount < 8)  {	// Random mode
+			//if (n.receivedSignal && (currentTime - n.lastSignalRelease > n.releaseDelay) && n.firedCount < 8)  {	// Random mode
 				// if (n.receivedSignal && !n.fired )  {	// Single propagation mode
 				n.fired = true;
 				n.lastSignalRelease = currentTime;
@@ -904,7 +907,7 @@ function initGui() {
 	gui_settings = gui.addFolder( 'Settings Signals ' );
 	gui_settings.add( neuralNet.settings, 'currentMaxSignals', 0, neuralNet.settings.limitSignals ).name( 'Max Signals' );
 	gui_settings.add( neuralNet.particlePool, 'pSize', 0.2, 2 ).name( 'Signal Size' );
-	gui_settings.add( neuralNet.settings, 'amountEmittedSignals', 1, 20 ).name( 'Amount Emitted Signals' );
+	gui_settings.add( neuralNet.settings, 'amountEmittedSignals', 1, 200 ).name( 'Amount Emitted Signals' );
 	gui_settings.add( neuralNet.settings, 'signalMinSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Min Speed' );
 	gui_settings.add( neuralNet.settings, 'signalMaxSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Max Speed' );
 	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );

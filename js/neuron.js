@@ -28,7 +28,6 @@ Neuron.prototype.connectNeuronTo = function ( neuronB ) {
 
 Neuron.prototype.createSignal = function ( particlePool, minSpeed, maxSpeed ) {
 
-	this.firedCount += 1;
 	this.receivedSignal = false;
 
 	var signals = [];
@@ -49,12 +48,16 @@ Neuron.prototype.createSignal = function ( particlePool, minSpeed, maxSpeed ) {
 					var c = new Signal( particlePool, minSpeed, maxSpeed );
 					c.setConnection( this.connection[ i ] );
 					signals.push( c );
+					this.firedCount += 1;
+
 				}
 
-			}else{
+			}else{  // initial release
 					var c = new Signal( particlePool, minSpeed, maxSpeed );
 					c.setConnection( this.connection[ i ] );
 					signals.push( c );
+					this.firedCount += 1;
+
 			}
 		
 		}

@@ -313,7 +313,7 @@ NeuralNetwork.prototype.update = function ( deltaTime ) {
 		if ( this.components.allSignals.length < this.settings.currentMaxSignals - this.settings.maxConnectionsPerNeuron ) { // limit total signals currentMaxSignals - maxConnectionsPerNeuron because allSignals can not bigger than particlePool size
 
 			if ( n.receivedSignal && n.firedCount < 8 ) { // Traversal mode
-				// if (n.receivedSignal && (currentTime - n.lastSignalRelease > n.releaseDelay) && n.firedCount < 8)  {	// Random mode
+			//if (n.receivedSignal && (currentTime - n.lastSignalRelease > n.releaseDelay) && n.firedCount < 8)  {	// Random mode
 				// if (n.receivedSignal && !n.fired )  {	// Single propagation mode
 				n.fired = true;
 				n.lastSignalRelease = currentTime;

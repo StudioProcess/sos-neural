@@ -35,9 +35,28 @@ Neuron.prototype.createSignal = function ( particlePool, minSpeed, maxSpeed ) {
 	// create signal to all connected axons
 	for ( var i = 0; i < this.connection.length; i++ ) {
 		if ( this.connection[ i ].axon !== this.prevReleaseAxon ) {
-			var c = new Signal( particlePool, minSpeed, maxSpeed );
-			c.setConnection( this.connection[ i ] );
-			signals.push( c );
+
+
+			if( !this.equals(window.neuralNet.initialReleasePosition) ){
+				// calculate direction from this signal
+				pos =  this.connection[ i ].axon.getPoint( 0.5 ).clone(); // get the middle point, so it doesn't depend on the start point
+				var directionNew = pos.sub(this);
+				var directionFromInit = new THREE.Vector3().subVectors(this , window.neuralNet.initialReleasePosition);
+				
+				var angle = directionFromInit.angleTo(directionNew);
+
+				if( angle < Math.PI/2.0){
+					var c = new Signal( particlePool, minSpeed, maxSpeed );
+					c.setConnection( this.connection[ i ] );
+					signals.push( c );
+				}
+
+			}else{
+					var c = new Signal( particlePool, minSpeed, maxSpeed );
+					c.setConnection( this.connection[ i ] );
+					signals.push( c );
+			}
+		
 		}
 	}
 	return signals;
@@ -287,6 +306,7 @@ function NeuralNetwork() {
 		verticesSkipStep: 1,
 		maxAxonDist: 30,
 		maxConnectionsPerNeuron: 6,
+		amountEmittedSignals: 2,
 		signalMinSpeed: 0.5,
 		signalMaxSpeed: 0.8,
 		currentMaxSignals: 3000,
@@ -394,12 +414,17 @@ NeuralNetwork.prototype.createNetwork = function () {
 
 	} );
 
+
+	//signals 
+	this.initialReleasePosition = new THREE.Vector3();
+
 	// info api
 	this.numNeurons = 0;
 	this.numAxons = 0;
 	this.numSignals = 0;
 
 	this.numPassive = 0;
+
 
 	// initialize NN
 	this.initNeuralNetwork();
@@ -546,6 +571,21 @@ NeuralNetwork.prototype.initAxons = function () {
 
 };
 
+NeuralNetwork.prototype.releaseSignal = function ( deltaTime ) {
+
+		this.resetAllNeurons();
+		selectedNeuron =  this.components.neurons[ THREE.Math.randInt( 0, this.components.neurons.length ) ];
+		this.initialReleasePosition = selectedNeuron;
+		for (var i =0; i < this.settings.amountEmittedSignals; i++) {
+			this.releaseSignalAt( selectedNeuron);
+
+		}
+		
+
+
+}
+
+
 NeuralNetwork.prototype.update = function ( deltaTime ) {
 
 	if ( !this.initialized ) return;
@@ -574,14 +614,7 @@ NeuralNetwork.prototype.update = function ( deltaTime ) {
 		n.receivedSignal = false; // if neuron recieved signal but still in delay reset it
 	}
 
-	// reset all neurons and when there is no signal and trigger release signal at random neuron
-	if ( this.components.allSignals.length === 0 ) {
-
-		this.resetAllNeurons();
-		this.releaseSignalAt( this.components.neurons[ THREE.Math.randInt( 0, this.components.neurons.length ) ] );
-
-	}
-
+	
 	// update and remove dead signals
 	for ( var j = this.components.allSignals.length - 1; j >= 0; j-- ) {
 		var s = this.components.allSignals[ j ];
@@ -871,10 +904,12 @@ function initGui() {
 	gui_settings = gui.addFolder( 'Settings Signals ' );
 	gui_settings.add( neuralNet.settings, 'currentMaxSignals', 0, neuralNet.settings.limitSignals ).name( 'Max Signals' );
 	gui_settings.add( neuralNet.particlePool, 'pSize', 0.2, 2 ).name( 'Signal Size' );
+	gui_settings.add( neuralNet.settings, 'amountEmittedSignals', 1, 20 ).name( 'Amount Emitted Signals' );
 	gui_settings.add( neuralNet.settings, 'signalMinSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Min Speed' );
 	gui_settings.add( neuralNet.settings, 'signalMaxSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Max Speed' );
 	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );
 	gui_settings.addColor( sceneSettings, 'bgColor' ).name( 'Background' );
+	gui_settings.add( neuralNet, 'releaseSignal' ).name( 'Release Signal' );
 	gui_settings.open();
 	for ( var i = 0; i < gui_settings.__controllers.length; i++ ) {
 		gui_settings.__controllers[ i ].onChange( updateNeuralNetworkSettings );

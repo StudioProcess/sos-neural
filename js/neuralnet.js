@@ -18,6 +18,7 @@ function NeuralNetwork() {
 		verticesSkipStep: 1,
 		maxAxonDist: 30,
 		maxConnectionsPerNeuron: 6,
+		amountEmittedSignals: 2,
 		signalMinSpeed: 0.5,
 		signalMaxSpeed: 0.8,
 		currentMaxSignals: 3000,
@@ -125,12 +126,17 @@ NeuralNetwork.prototype.createNetwork = function () {
 
 	} );
 
+
+	//signals 
+	this.initialReleasePosition = new THREE.Vector3();
+
 	// info api
 	this.numNeurons = 0;
 	this.numAxons = 0;
 	this.numSignals = 0;
 
 	this.numPassive = 0;
+
 
 	// initialize NN
 	this.initNeuralNetwork();
@@ -277,6 +283,21 @@ NeuralNetwork.prototype.initAxons = function () {
 
 };
 
+NeuralNetwork.prototype.releaseSignal = function ( deltaTime ) {
+
+		this.resetAllNeurons();
+		selectedNeuron =  this.components.neurons[ THREE.Math.randInt( 0, this.components.neurons.length ) ];
+		this.initialReleasePosition = selectedNeuron;
+		for (var i =0; i < this.settings.amountEmittedSignals; i++) {
+			this.releaseSignalAt( selectedNeuron);
+
+		}
+		
+
+
+}
+
+
 NeuralNetwork.prototype.update = function ( deltaTime ) {
 
 	if ( !this.initialized ) return;
@@ -305,14 +326,7 @@ NeuralNetwork.prototype.update = function ( deltaTime ) {
 		n.receivedSignal = false; // if neuron recieved signal but still in delay reset it
 	}
 
-	// reset all neurons and when there is no signal and trigger release signal at random neuron
-	if ( this.components.allSignals.length === 0 ) {
-
-		this.resetAllNeurons();
-		this.releaseSignalAt( this.components.neurons[ THREE.Math.randInt( 0, this.components.neurons.length ) ] );
-
-	}
-
+	
 	// update and remove dead signals
 	for ( var j = this.components.allSignals.length - 1; j >= 0; j-- ) {
 		var s = this.components.allSignals[ j ];

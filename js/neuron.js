@@ -35,9 +35,28 @@ Neuron.prototype.createSignal = function ( particlePool, minSpeed, maxSpeed ) {
 	// create signal to all connected axons
 	for ( var i = 0; i < this.connection.length; i++ ) {
 		if ( this.connection[ i ].axon !== this.prevReleaseAxon ) {
-			var c = new Signal( particlePool, minSpeed, maxSpeed );
-			c.setConnection( this.connection[ i ] );
-			signals.push( c );
+
+
+			if( !this.equals(window.neuralNet.initialReleasePosition) ){
+				// calculate direction from this signal
+				pos =  this.connection[ i ].axon.getPoint( 0.5 ).clone(); // get the middle point, so it doesn't depend on the start point
+				var directionNew = pos.sub(this);
+				var directionFromInit = new THREE.Vector3().subVectors(this , window.neuralNet.initialReleasePosition);
+				
+				var angle = directionFromInit.angleTo(directionNew);
+
+				if( angle < Math.PI/2.0){
+					var c = new Signal( particlePool, minSpeed, maxSpeed );
+					c.setConnection( this.connection[ i ] );
+					signals.push( c );
+				}
+
+			}else{
+					var c = new Signal( particlePool, minSpeed, maxSpeed );
+					c.setConnection( this.connection[ i ] );
+					signals.push( c );
+			}
+		
 		}
 	}
 	return signals;

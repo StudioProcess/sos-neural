@@ -15,10 +15,12 @@ function initGui() {
 	gui_settings = gui.addFolder( 'Settings Signals ' );
 	gui_settings.add( neuralNet.settings, 'currentMaxSignals', 0, neuralNet.settings.limitSignals ).name( 'Max Signals' );
 	gui_settings.add( neuralNet.particlePool, 'pSize', 0.2, 2 ).name( 'Signal Size' );
+	gui_settings.add( neuralNet.settings, 'amountEmittedSignals', 1, 20 ).name( 'Amount Emitted Signals' );
 	gui_settings.add( neuralNet.settings, 'signalMinSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Min Speed' );
 	gui_settings.add( neuralNet.settings, 'signalMaxSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Max Speed' );
 	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );
 	gui_settings.addColor( sceneSettings, 'bgColor' ).name( 'Background' );
+	gui_settings.add( neuralNet, 'releaseSignal' ).name( 'Release Signal' );
 	gui_settings.open();
 	for ( var i = 0; i < gui_settings.__controllers.length; i++ ) {
 		gui_settings.__controllers[ i ].onChange( updateNeuralNetworkSettings );

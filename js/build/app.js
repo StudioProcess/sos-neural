@@ -284,14 +284,14 @@ function NeuralNetwork() {
 		limitSignals           : 10000
 		*/
 
-		verticesSkipStep: 2,
-		maxAxonDist: 10,
+		verticesSkipStep: 1,
+		maxAxonDist: 30,
 		maxConnectionsPerNeuron: 6,
 		signalMinSpeed: 1.75,
 		signalMaxSpeed: 3.25,
 		currentMaxSignals: 3000,
 		limitSignals: 10000,
-		maxVertices: 10000,
+		maxVertices: 1000,
 		VerticesSeed: 989
 
 	};
@@ -396,20 +396,32 @@ NeuralNetwork.prototype.createVertices = function () {
 
 	var currentAmount = 0
 	noise.seed(this.settings.VerticesSeed);
-	var xMax  = 200; 
+	var xMax  = 100; 
 	var yMax = 20; 
-	var zMax = 200;
+	var zMax = 100;
 
+	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
+	var unsuccessfullLoops = 0
 	while( currentAmount < this.settings.maxVertices){
 
-		xRandom = (0.5-Math.random())*xMax;
-		yRandom = (0.5-Math.random())*yMax;
-		zRandom = (0.5-Math.random())*zMax;
+		noiseFreq =3;
+		xRandom = Math.random();
+		yRandom = Math.random();
+		zRandom = Math.random();
 
-		
+		probability = Math.abs(noise.perlin3(xRandom*noiseFreq, zRandom*noiseFreq,yRandom*noiseFreq))
 
-		vertices[currentAmount] = new THREE.Vector3(xRandom, yRandom, zRandom);
-		currentAmount++;
+		if(probability > 0.9 - (unsuccessfullLoops/100000.0)){ // this could be a Random range
+			xPos = (0.5 - xRandom) * xMax;
+			yPos = (0.5 - yRandom) * yMax;
+			zPos = (0.5 - zRandom) * zMax;
+			vertices[currentAmount] = new THREE.Vector3(xPos, yPos, zPos);
+			currentAmount++;		
+
+		}else{
+			unsuccessfullLoops++;
+		}
+
 
 	}
 

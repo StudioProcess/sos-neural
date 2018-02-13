@@ -287,14 +287,30 @@ function NeuralNetwork() {
 		verticesSkipStep: 1,
 		maxAxonDist: 30,
 		maxConnectionsPerNeuron: 6,
-		signalMinSpeed: 1.75,
-		signalMaxSpeed: 3.25,
+		signalMinSpeed: 0.5,
+		signalMaxSpeed: 0.8,
 		currentMaxSignals: 3000,
 		limitSignals: 10000,
-		maxVertices: 1000,
-		VerticesSeed: 989
+		maxNeurons: 3000,
+		neuroSeed: 1000,
+		noiseFreq: 15
 
 	};
+
+
+	this.createNetwork();
+
+}
+
+
+
+NeuralNetwork.prototype.createNetwork = function () {
+
+	this.initialized = false;
+
+	if( this.meshComponents)
+		scene.remove( this.meshComponents );
+
 
 	this.meshComponents = new THREE.Object3D();
 	this.particlePool = new ParticlePool( this.settings.limitSignals );
@@ -388,34 +404,35 @@ function NeuralNetwork() {
 	// initialize NN
 	this.initNeuralNetwork();
 
-}
+	scene.add( this.meshComponents );
+
+};
 
 NeuralNetwork.prototype.createVertices = function () {
 
-	var vertices  = new Array(this.settings.maxVertices);
+	var neurons  = new Array(this.settings.maxNeurons);
 
 	var currentAmount = 0
-	noise.seed(this.settings.VerticesSeed);
+	noise.seed(this.settings.neuroSeed);
 	var xMax  = 100; 
 	var yMax = 20; 
 	var zMax = 100;
 
 	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
 	var unsuccessfullLoops = 0
-	while( currentAmount < this.settings.maxVertices){
+	while( currentAmount < this.settings.maxNeurons){
 
-		noiseFreq =3;
 		xRandom = Math.random();
 		yRandom = Math.random();
 		zRandom = Math.random();
 
-		probability = Math.abs(noise.perlin3(xRandom*noiseFreq, zRandom*noiseFreq,yRandom*noiseFreq))
+		probability = Math.abs(noise.perlin3(xRandom*this.settings.noiseFreq, zRandom*this.settings.noiseFreq,yRandom*this.settings.noiseFreq))
 
-		if(probability > 0.9 - (unsuccessfullLoops/100000.0)){ // this could be a Random range
+		if(probability > 0.95 - (unsuccessfullLoops/10000000.0)){ // this could be a Random range
 			xPos = (0.5 - xRandom) * xMax;
 			yPos = (0.5 - yRandom) * yMax;
 			zPos = (0.5 - zRandom) * zMax;
-			vertices[currentAmount] = new THREE.Vector3(xPos, yPos, zPos);
+			neurons[currentAmount] = new THREE.Vector3(xPos, yPos, zPos);
 			currentAmount++;		
 
 		}else{
@@ -426,7 +443,7 @@ NeuralNetwork.prototype.createVertices = function () {
 	}
 
 
-	return vertices;
+	return neurons;
 
 };
 
@@ -830,7 +847,6 @@ var gui, gui_info, gui_settings;
 function main() {
 
 	var neuralNet = window.neuralNet = new NeuralNetwork();
-	scene.add( neuralNet.meshComponents );
 
 	initGui();
 
@@ -852,18 +868,36 @@ function initGui() {
 	gui_info.add( neuralNet, 'numSignals', 0, neuralNet.settings.limitSignals ).name( 'Signals' );
 	gui_info.autoListen = false;
 
-	gui_settings = gui.addFolder( 'Settings' );
+	gui_settings = gui.addFolder( 'Settings Signals ' );
 	gui_settings.add( neuralNet.settings, 'currentMaxSignals', 0, neuralNet.settings.limitSignals ).name( 'Max Signals' );
 	gui_settings.add( neuralNet.particlePool, 'pSize', 0.2, 2 ).name( 'Signal Size' );
 	gui_settings.add( neuralNet.settings, 'signalMinSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Min Speed' );
 	gui_settings.add( neuralNet.settings, 'signalMaxSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Max Speed' );
+	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );
+	gui_settings.addColor( sceneSettings, 'bgColor' ).name( 'Background' );
+	gui_settings.open();
+	for ( var i = 0; i < gui_settings.__controllers.length; i++ ) {
+		gui_settings.__controllers[ i ].onChange( updateNeuralNetworkSettings );
+	}
+
+	gui_settings = gui.addFolder( 'Settings Connections ' );
+	gui_settings.add( neuralNet.settings, 'maxAxonDist', 0, 100 ).name( 'Max Distance' );
+	gui_settings.add( neuralNet.settings, 'maxConnectionsPerNeuron', 0, 100 ).name( 'Max Connection Per Neuron' ).step(1);
+	gui_settings.add( neuralNet, 'axonOpacityMultiplier', 0.0, 5.0 ).name( 'Axon Opacity Mult' );
+	gui_settings.addColor( neuralNet, 'axonColor' ).name( 'Axon Color' );
+	gui_settings.open();
+
+	for ( var i = 0; i < gui_settings.__controllers.length; i++ ) {
+		gui_settings.__controllers[ i ].onChange( updateNeuralNetworkSettings );
+	}
+	gui_settings = gui.addFolder( 'Settings Neurons' );
+	gui_settings.add( neuralNet.settings, 'maxNeurons', 0, 100000 ).name( 'Max Neurons' ).step(1);
+	gui_settings.add( neuralNet.settings, 'neuroSeed', 0, 1000 ).name( 'Neuro Seed' ).step(1);
+	gui_settings.add( neuralNet.settings, 'noiseFreq', 0, 100 ).name( 'Noise Frequency' ).step(0.1);
 	gui_settings.add( neuralNet, 'neuronSizeMultiplier', 0, 2 ).name( 'Neuron Size Mult' );
 	gui_settings.add( neuralNet, 'neuronOpacity', 0, 1.0 ).name( 'Neuron Opacity' );
-	gui_settings.add( neuralNet, 'axonOpacityMultiplier', 0.0, 5.0 ).name( 'Axon Opacity Mult' );
-	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );
 	gui_settings.addColor( neuralNet, 'neuronColor' ).name( 'Neuron Color' );
-	gui_settings.addColor( neuralNet, 'axonColor' ).name( 'Axon Color' );
-	gui_settings.addColor( sceneSettings, 'bgColor' ).name( 'Background' );
+	gui_settings.add(neuralNet, 'createNetwork').name('Create Network');
 
 	gui_info.open();
 	gui_settings.open();

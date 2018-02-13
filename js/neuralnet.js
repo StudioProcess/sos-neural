@@ -18,14 +18,30 @@ function NeuralNetwork() {
 		verticesSkipStep: 1,
 		maxAxonDist: 30,
 		maxConnectionsPerNeuron: 6,
-		signalMinSpeed: 1.75,
-		signalMaxSpeed: 3.25,
+		signalMinSpeed: 0.5,
+		signalMaxSpeed: 0.8,
 		currentMaxSignals: 3000,
 		limitSignals: 10000,
-		maxVertices: 1000,
-		VerticesSeed: 989
+		maxNeurons: 3000,
+		neuroSeed: 1000,
+		noiseFreq: 15
 
 	};
+
+
+	this.createNetwork();
+
+}
+
+
+
+NeuralNetwork.prototype.createNetwork = function () {
+
+	this.initialized = false;
+
+	if( this.meshComponents)
+		scene.remove( this.meshComponents );
+
 
 	this.meshComponents = new THREE.Object3D();
 	this.particlePool = new ParticlePool( this.settings.limitSignals );
@@ -119,34 +135,35 @@ function NeuralNetwork() {
 	// initialize NN
 	this.initNeuralNetwork();
 
-}
+	scene.add( this.meshComponents );
+
+};
 
 NeuralNetwork.prototype.createVertices = function () {
 
-	var vertices  = new Array(this.settings.maxVertices);
+	var neurons  = new Array(this.settings.maxNeurons);
 
 	var currentAmount = 0
-	noise.seed(this.settings.VerticesSeed);
+	noise.seed(this.settings.neuroSeed);
 	var xMax  = 100; 
 	var yMax = 20; 
 	var zMax = 100;
 
 	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
 	var unsuccessfullLoops = 0
-	while( currentAmount < this.settings.maxVertices){
+	while( currentAmount < this.settings.maxNeurons){
 
-		noiseFreq =3;
 		xRandom = Math.random();
 		yRandom = Math.random();
 		zRandom = Math.random();
 
-		probability = Math.abs(noise.perlin3(xRandom*noiseFreq, zRandom*noiseFreq,yRandom*noiseFreq))
+		probability = Math.abs(noise.perlin3(xRandom*this.settings.noiseFreq, zRandom*this.settings.noiseFreq,yRandom*this.settings.noiseFreq))
 
-		if(probability > 0.9 - (unsuccessfullLoops/100000.0)){ // this could be a Random range
+		if(probability > 0.95 - (unsuccessfullLoops/10000000.0)){ // this could be a Random range
 			xPos = (0.5 - xRandom) * xMax;
 			yPos = (0.5 - yRandom) * yMax;
 			zPos = (0.5 - zRandom) * zMax;
-			vertices[currentAmount] = new THREE.Vector3(xPos, yPos, zPos);
+			neurons[currentAmount] = new THREE.Vector3(xPos, yPos, zPos);
 			currentAmount++;		
 
 		}else{
@@ -157,7 +174,7 @@ NeuralNetwork.prototype.createVertices = function () {
 	}
 
 
-	return vertices;
+	return neurons;
 
 };
 

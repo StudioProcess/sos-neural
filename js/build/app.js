@@ -308,6 +308,7 @@ function NeuralNetwork() {
 
 		verticesSkipStep: 1,
 		maxAxonDist: 30,
+		axonThickness: 2,
 		maxConnectionsPerNeuron: 6,
 		amountEmittedSignals: 2,
 		signalMinSpeed: 0.5,
@@ -557,7 +558,8 @@ NeuralNetwork.prototype.initAxons = function () {
 		fragmentShader: null,
 		blending: THREE.AdditiveBlending,
 		depthTest: false,
-		transparent: true
+		transparent: true,
+		linewidth: this.settings.axonThickness
 	} );
 
 	this.axonMesh = new THREE.Line( this.axonGeom, this.axonShaderMaterial, THREE.LinePieces );
@@ -708,7 +710,7 @@ NeuralNetwork.prototype.updateSettings = function () {
 
 	this.axonUniforms.color.value.set( this.axonColor );
 	this.axonUniforms.opacityMultiplier.value = this.axonOpacityMultiplier;
-
+	this.axonShaderMaterial.linewidth = this.settings.axonThickness;
 	this.particlePool.updateSettings();
 
 
@@ -920,8 +922,9 @@ function initGui() {
 
 	gui_settings = gui.addFolder( 'Settings Connections ' );
 	gui_settings.add( neuralNet.settings, 'maxAxonDist', 0, 100 ).name( 'Max Distance' );
+	gui_settings.add( neuralNet.settings, 'axonThickness', 0, 100 ).name( 'Axon Thickness' );
 	gui_settings.add( neuralNet.settings, 'maxConnectionsPerNeuron', 0, 100 ).name( 'Max Connection Per Neuron' ).step(1);
-	gui_settings.add( neuralNet, 'axonOpacityMultiplier', 0.0, 5.0 ).name( 'Axon Opacity Mult' );
+	gui_settings.add( neuralNet, 'axonOpacityMultiplier', 0.0, 10.0 ).name( 'Axon Opacity Mult' );
 	gui_settings.addColor( neuralNet, 'axonColor' ).name( 'Axon Color' );
 	gui_settings.open();
 

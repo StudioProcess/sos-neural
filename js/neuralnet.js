@@ -17,6 +17,7 @@ function NeuralNetwork() {
 
 		verticesSkipStep: 1,
 		maxAxonDist: 30,
+		axonThickness: 2,
 		maxConnectionsPerNeuron: 6,
 		amountEmittedSignals: 2,
 		signalMinSpeed: 0.5,
@@ -266,7 +267,8 @@ NeuralNetwork.prototype.initAxons = function () {
 		fragmentShader: null,
 		blending: THREE.AdditiveBlending,
 		depthTest: false,
-		transparent: true
+		transparent: true,
+		linewidth: this.settings.axonThickness
 	} );
 
 	this.axonMesh = new THREE.Line( this.axonGeom, this.axonShaderMaterial, THREE.LinePieces );
@@ -417,7 +419,7 @@ NeuralNetwork.prototype.updateSettings = function () {
 
 	this.axonUniforms.color.value.set( this.axonColor );
 	this.axonUniforms.opacityMultiplier.value = this.axonOpacityMultiplier;
-
+	this.axonShaderMaterial.linewidth = this.settings.axonThickness;
 	this.particlePool.updateSettings();
 
 

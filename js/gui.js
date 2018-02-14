@@ -28,8 +28,9 @@ function initGui() {
 
 	gui_settings = gui.addFolder( 'Settings Connections ' );
 	gui_settings.add( neuralNet.settings, 'maxAxonDist', 0, 100 ).name( 'Max Distance' );
+	gui_settings.add( neuralNet.settings, 'axonThickness', 0, 100 ).name( 'Axon Thickness' );
 	gui_settings.add( neuralNet.settings, 'maxConnectionsPerNeuron', 0, 100 ).name( 'Max Connection Per Neuron' ).step(1);
-	gui_settings.add( neuralNet, 'axonOpacityMultiplier', 0.0, 5.0 ).name( 'Axon Opacity Mult' );
+	gui_settings.add( neuralNet, 'axonOpacityMultiplier', 0.0, 10.0 ).name( 'Axon Opacity Mult' );
 	gui_settings.addColor( neuralNet, 'axonColor' ).name( 'Axon Color' );
 	gui_settings.open();
 

@@ -92,7 +92,7 @@ function Signal( particlePool, minSpeed, maxSpeed ) {
 
 
 // create the trail renderer object
-	this.trailRenderer = new THREE.TrailRenderer( scene, false );
+	this.trailRenderer = new THREE.TrailRenderer( scene, true );
 
 	// create material for the trail renderer
 	var trailMaterial = THREE.TrailRenderer.createBaseMaterial();	
@@ -106,11 +106,17 @@ function Signal( particlePool, minSpeed, maxSpeed ) {
 	var trailLength = 20;
 
 	var trailHeadGeometry = [];
-	trailHeadGeometry.push( 
-	  new THREE.Vector3( -0.1* neuralNet.settings.trailSizeMult, 0.0, 0.0 ), 
-	  new THREE.Vector3( 0.0* neuralNet.settings.trailSizeMul, 0.0, 0.0 ), 
-	  new THREE.Vector3( 0.1* neuralNet.settings.trailSizeMul, 0.0, 0.0 ) 
-	);	
+	
+	for ( var i = 0; i < circlePoints.length; i++)  {
+		trailHeadGeometry.push( circlePoints[i].clone().multiplyScalar( neuralNet.settings.trailSizeMult));
+	}
+
+
+	// trailHeadGeometry.push( 
+	//   new THREE.Vector3( -0.1* neuralNet.settings.trailSizeMult, 0.0, 0.0 ), 
+	//   new THREE.Vector3( 0.0* neuralNet.settings.trailSizeMul, 0.0, 0.0 ), 
+	//   new THREE.Vector3( 0.1* neuralNet.settings.trailSizeMul, 0.0, 0.0 ) 
+	// );	
 	// initialize the trail
 	var geom = new THREE.Geometry();
 	geom.vertices.push(this.particle);
@@ -888,6 +894,21 @@ stats = new Stats();
 container.appendChild( stats.domElement );
 
 // ---- grid & axis helper
+
+
+circlePoints = [];
+var twoPI = Math.PI * 2;
+var index = 0;
+var scale = 0.1;
+var inc = twoPI / 16.0;
+for ( var i = 0; i <= twoPI + inc; i+= inc )  {
+	var vector = new THREE.Vector3();
+	vector.set( 0, Math.cos( i ) * scale, Math.sin( i ) * scale );
+	circlePoints[ index ] = vector;
+	index ++;
+}
+
+
 
 
 function updateHelpers() {

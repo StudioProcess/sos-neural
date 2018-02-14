@@ -19,6 +19,7 @@ function initGui() {
 	gui_settings.add( neuralNet.settings, 'signalMinSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Min Speed' );
 	gui_settings.add( neuralNet.settings, 'signalMaxSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Max Speed' );
 	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );
+	gui_settings.add(  neuralNet.settings, 'trailSizeMult',0.0, 10.0, 0.01  ).name( 'Trail Size Mult' );
 	gui_settings.addColor( sceneSettings, 'bgColor' ).name( 'Background' );
 	gui_settings.add( neuralNet, 'releaseSignal' ).name( 'Release Signal' );
 	gui_settings.open();
@@ -38,7 +39,7 @@ function initGui() {
 		gui_settings.__controllers[ i ].onChange( updateNeuralNetworkSettings );
 	}
 	gui_settings = gui.addFolder( 'Settings Neurons' );
-	gui_settings.add( neuralNet.settings, 'maxNeurons', 0, 100000 ).name( 'Max Neurons' ).step(1);
+	gui_settings.add( neuralNet.settings, 'maxNeurons', 0, 10000 ).name( 'Max Neurons' ).step(1);
 	gui_settings.add( neuralNet.settings, 'neuroSeed', 0, 1000 ).name( 'Neuro Seed' ).step(1);
 	gui_settings.add( neuralNet.settings, 'noiseFreq', 0, 100 ).name( 'Noise Frequency' ).step(0.1);
 	gui_settings.add( neuralNet, 'neuronSizeMultiplier', 0, 2 ).name( 'Neuron Size Mult' );

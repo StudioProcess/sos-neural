@@ -9,14 +9,14 @@ function Axon( neuronA, neuronB ) {
 	//this.cpLength = neuronA.distanceTo( neuronB ) / THREE.Math.randFloat( 1.5, 4.0 );
 	//this.controlPointA = this.getControlPoint( neuronA, neuronB );
 	//this.controlPointB = this.getControlPoint( neuronB, neuronA );
-	THREE.LineCurve.call( this, this.neuronA,  this.neuronB );
+	THREE.LineCurve3.call( this, this.neuronA,  this.neuronB );
 	//THREE.CubicBezierCurve3.call( this, this.neuronA, this.controlPointA, this.controlPointB, this.neuronB );
 
 	this.vertices = this.getSubdividedVertices();
 
 }
 
-Axon.prototype = Object.create( THREE.LineCurve.prototype );
+Axon.prototype = Object.create( THREE.LineCurve3.prototype );
 
 Axon.prototype.getSubdividedVertices = function () {
 	return this.getSpacedPoints( this.bezierSubdivision );

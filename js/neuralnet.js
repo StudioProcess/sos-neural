@@ -26,10 +26,10 @@ function NeuralNetwork() {
 		limitSignals: 10000,
 		maxNeurons: 3000,
 		neuroSeed: 1000,
-		noiseFreq: 15
+		noiseFreq: 15,
+		trailSizeMult: 1.0
 
 	};
-
 
 	this.createNetwork();
 
@@ -46,6 +46,7 @@ NeuralNetwork.prototype.createNetwork = function () {
 
 
 	this.meshComponents = new THREE.Object3D();
+	this.trailComponets = new THREE.Object3D();
 	this.particlePool = new ParticlePool( this.settings.limitSignals );
 	this.meshComponents.add( this.particlePool.meshComponents );
 
@@ -87,7 +88,7 @@ NeuralNetwork.prototype.createNetwork = function () {
 	this.spriteTextureNeuron = TEXTURES.electric;
 	this.neuronColor = '#ffffff';
 	this.neuronOpacity = 0.75;
-	this.neuronsGeom = new THREE.Geometry();
+	this.neuronsGeom = new THREE.BufferGeometry();
 
 	this.neuronUniforms = {
 		sizeMultiplier: {
@@ -104,21 +105,10 @@ NeuralNetwork.prototype.createNetwork = function () {
 		}
 	};
 
-	this.neuronAttributes = {
-		color: {
-			type: 'c',
-			value: []
-		},
-		size: {
-			type: 'f',
-			value: []
-		}
-	};
+
 
 	this.neuronShaderMaterial = new THREE.ShaderMaterial( {
-
 		uniforms: this.neuronUniforms,
-		attributes: this.neuronAttributes,
 		vertexShader: null,
 		fragmentShader: null,
 		blending: THREE.AdditiveBlending,
@@ -142,6 +132,8 @@ NeuralNetwork.prototype.createNetwork = function () {
 	// initialize NN
 	this.initNeuralNetwork();
 
+
+	sceneTrail.add( this.trailComponets);
 	scene.add( this.meshComponents );
 
 };
@@ -153,8 +145,8 @@ NeuralNetwork.prototype.createVertices = function () {
 	var currentAmount = 0
 	noise.seed(this.settings.neuroSeed);
 	var xMax  = 100; 
-	var yMax = 20; 
-	var zMax = 100;
+	var yMax = 100; 
+	var zMax = 20;
 
 	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
 	var unsuccessfullLoops = 0
@@ -164,7 +156,7 @@ NeuralNetwork.prototype.createVertices = function () {
 		yRandom = Math.random();
 		zRandom = Math.random();
 
-		probability = Math.abs(noise.perlin3(xRandom*this.settings.noiseFreq, zRandom*this.settings.noiseFreq,yRandom*this.settings.noiseFreq))
+		probability = Math.abs(noise.perlin3(xRandom*this.settings.noiseFreq,yRandom*this.settings.noiseFreq,zRandom*this.settings.noiseFreq))
 
 		if(probability > 0.95 - (unsuccessfullLoops/10000000.0)){ // this could be a Random range
 			xPos = (0.5 - xRandom) * xMax;
@@ -204,25 +196,30 @@ NeuralNetwork.prototype.initNeuralNetwork = function () {
 };
 
 NeuralNetwork.prototype.initNeurons = function ( inputVertices ) {
+	
+	var positions = [];
+	var colors = [];
+	var size = [];
+	var color = new THREE.Color( '#ffffff' );
 
+	
 	var i;
-	for ( i = 0; i < inputVertices.length; i += this.settings.verticesSkipStep ) {
+	for ( i = 0; i < inputVertices.length; i++ ) {
 		var pos = inputVertices[ i ];
 		var n = new Neuron( pos.x, pos.y, pos.z );
 		this.components.neurons.push( n );
-		this.neuronsGeom.vertices.push( n );
-		// dont set neuron's property here because its skip vertices
+		positions.push( pos.x, pos.y, pos.z );
+		colors.push(color.r,color.g,color.b); // initial neuron color
+		size.push( THREE.Math.randFloat( 0.75, 3.0 )); // initial neuron size
 	}
 
-	// set neuron attributes value
-	for ( i = 0; i < this.components.neurons.length; i++ ) {
-		this.neuronAttributes.color.value[ i ] = new THREE.Color( '#ffffff' ); // initial neuron color
-		this.neuronAttributes.size.value[ i ] = THREE.Math.randFloat( 0.75, 3.0 ); // initial neuron size
-	}
+	this.neuronsGeom.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+	this.neuronsGeom.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ).setDynamic( true )  );
+	this.neuronsGeom.addAttribute( 'size', new THREE.Float32BufferAttribute( size, 1 ).setDynamic( true )  );
 
 
 	// neuron mesh
-	this.neuronParticles = new THREE.PointCloud( this.neuronsGeom, this.neuronShaderMaterial );
+	this.neuronParticles = new THREE.Points( this.neuronsGeom, this.neuronShaderMaterial );
 	this.meshComponents.add( this.neuronParticles );
 
 	this.neuronShaderMaterial.needsUpdate = true;
@@ -255,14 +252,13 @@ NeuralNetwork.prototype.initAxons = function () {
 	var axonPositions = new Float32Array( this.axonPositions );
 	var axonOpacities = new Float32Array( this.axonAttributes.opacity.value );
 
-	this.axonGeom.addAttribute( 'index', new THREE.BufferAttribute( axonIndices, 1 ) );
+	this.axonGeom.setIndex(  new THREE.BufferAttribute( axonIndices, 1 ) );
 	this.axonGeom.addAttribute( 'position', new THREE.BufferAttribute( axonPositions, 3 ) );
 	this.axonGeom.addAttribute( 'opacity', new THREE.BufferAttribute( axonOpacities, 1 ) );
 	this.axonGeom.computeBoundingSphere();
 
 	this.axonShaderMaterial = new THREE.ShaderMaterial( {
 		uniforms: this.axonUniforms,
-		attributes: this.axonAttributes,
 		vertexShader: null,
 		fragmentShader: null,
 		blending: THREE.AdditiveBlending,
@@ -271,7 +267,7 @@ NeuralNetwork.prototype.initAxons = function () {
 		linewidth: this.settings.axonThickness
 	} );
 
-	this.axonMesh = new THREE.Line( this.axonGeom, this.axonShaderMaterial, THREE.LinePieces );
+	this.axonMesh = new THREE.LineSegments( this.axonGeom, this.axonShaderMaterial );
 	this.meshComponents.add( this.axonMesh );
 
 
@@ -409,11 +405,14 @@ NeuralNetwork.prototype.updateInfo = function () {
 NeuralNetwork.prototype.updateSettings = function () {
 
 	this.neuronUniforms.opacity.value = this.neuronOpacity;
-
-	for ( i = 0; i < this.components.neurons.length; i++ ) {
-		this.neuronAttributes.color.value[ i ].setStyle( this.neuronColor ); // initial neuron color
+	var color = new THREE.Color(this.neuronColor);
+	var colors = this.neuronsGeom.attributes.color.array;
+	for ( i = 0; i <colors.length; i+=3 ) {
+		colors[ i ] =  color.r ; // initial neuron color
+		colors[ i+1 ] =  color.g ; // initial neuron color
+		colors[ i+2 ] =  color.b ; // initial neuron color
 	}
-	this.neuronAttributes.color.needsUpdate = true;
+	this.neuronsGeom.attributes.color.needsUpdate = true;
 
 	this.neuronUniforms.sizeMultiplier.value = this.neuronSizeMultiplier;
 
@@ -421,8 +420,6 @@ NeuralNetwork.prototype.updateSettings = function () {
 	this.axonUniforms.opacityMultiplier.value = this.axonOpacityMultiplier;
 	this.axonShaderMaterial.linewidth = this.settings.axonThickness;
 	this.particlePool.updateSettings();
-
-
 };
 
 NeuralNetwork.prototype.testChangOpcAttr = function () {

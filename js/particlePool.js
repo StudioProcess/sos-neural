@@ -20,7 +20,7 @@ function ParticlePool( poolSize ) {
 	this.meshComponents = new THREE.Object3D();
 
 	// inner particle
-	this.pMat = new THREE.PointCloudMaterial( {
+	this.pMat = new THREE.PointsMaterial( {
 		map: this.spriteTextureSignal,
 		size: this.pSize,
 		color: this.pColor,
@@ -29,7 +29,8 @@ function ParticlePool( poolSize ) {
 		transparent: true
 	} );
 
-	this.pMesh = new THREE.PointCloud( this.pGeom, this.pMat );
+
+	this.pMesh = new THREE.Points( this.pGeom, this.pMat );
 	this.pMesh.frustumCulled = false;
 
 	this.meshComponents.add( this.pMesh );
@@ -40,7 +41,7 @@ function ParticlePool( poolSize ) {
 	this.pMat_outer.size = this.pSize * 10;
 	this.pMat_outer.opacity = 0.04;
 
-	this.pMesh_outer = new THREE.PointCloud( this.pGeom, this.pMat_outer );
+	this.pMesh_outer = new THREE.Points( this.pGeom, this.pMat_outer );
 	this.pMesh_outer.frustumCulled = false;
 
 	this.meshComponents.add( this.pMesh_outer );

@@ -17,7 +17,7 @@ module.exports = function ( grunt ) {
 				// footer: ''
 			},
 			build: {
-				src: [ 'js/neuron.js', 'js/signal.js', 'js/particlePool.js', 'js/particle.js', 'js/axon.js', 'js/neuralNet.js',
+				src: [ 'js/canvas-to-blob.min.js', 'js/neuron.js', 'js/signal.js', 'js/particlePool.js', 'js/particle.js', 'js/axon.js', 'js/neuralNet.js',
 						 'js/loaders.js', 'js/scene.js', 'js/main.js', 'js/gui.js', 'js/run.js', 'js/events.js','js/tilesaver_es5.js' ],
 
 				dest: 'js/build/app.js'

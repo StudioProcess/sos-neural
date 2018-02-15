@@ -42,12 +42,11 @@ function saveTiles(_renderer, _scene, _camera, _tiles) {
       targetContext.drawImage(tileRenderer.domElement, offsetX, offsetY);
     }
   }
-  var canvas = document.getElementById('canvas-container');
 
   tileCamera.clearViewOffset();
   filename = targetCanvas, timestamp + '_' + fullWidth + 'x' + fullHeight + '.png';
 
-    canvas.toBlob(function (blob) {
+    targetCanvas.toBlob(function (blob) {
       var url = URL.createObjectURL(blob);
       var link = document.createElement('a');
       link.download = filename;

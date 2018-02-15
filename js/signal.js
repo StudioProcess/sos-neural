@@ -15,10 +15,10 @@ function Signal( particlePool, minSpeed, maxSpeed ) {
 
 // create the trail renderer object
 	this.trailRenderer = new THREE.TrailRenderer( scene, true );
-
+	
 	// create material for the trail renderer
 	var trailMaterial = THREE.TrailRenderer.createBaseMaterial();	
-	var color = new THREE.Color(this.particle.pColor);
+	var color = new THREE.Color(particlePool.pColor);
 	var alphaHead  = neuralNet.settings.trailHeadOpacity;
 	var alphaTail  = neuralNet.settings.trailTailOpacity;
 	trailMaterial.uniforms.headColor.value.set(color.r,color.g,color.b, alphaHead);

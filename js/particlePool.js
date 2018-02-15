@@ -11,7 +11,7 @@ function ParticlePool( poolSize ) {
 	this.offScreenPos = new THREE.Vector3( 9999, 9999, 9999 );
 
 	this.pColor = '#ffffff';
-	this.pSize = 0.6 *0.1;
+	this.pSize = 0.3;
 
 	for ( var ii = 0; ii < this.poolSize; ii++ ) {
 		this.particles[ ii ] = new Particle( this );
@@ -78,9 +78,9 @@ ParticlePool.prototype.updateSettings = function () {
 
 	// inner particle
 	this.pMat.color.setStyle( this.pColor );
-	this.pMat.size = this.pSize*0.1;
+	this.pMat.size = this.pSize;
 	// outer particle
 	this.pMat_outer.color.setStyle( this.pColor );
-	this.pMat_outer.size = this.pSize *0.1* 1.5;
+	this.pMat_outer.size = this.pSize * 1.5;
 
 };

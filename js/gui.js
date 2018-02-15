@@ -14,12 +14,15 @@ function initGui() {
 
 	gui_settings = gui.addFolder( 'Settings Signals ' );
 	gui_settings.add( neuralNet.settings, 'currentMaxSignals', 0, neuralNet.settings.limitSignals ).name( 'Max Signals' );
-	gui_settings.add( neuralNet.particlePool, 'pSize', 0.2, 10 ).name( 'Signal Size' );
+	gui_settings.add( neuralNet.particlePool, 'pSize', 0.0, 10 ).name( 'Signal Size' );
 	gui_settings.add( neuralNet.settings, 'amountEmittedSignals', 1, 200 ).name( 'Amount Emitted Signals' );
 	gui_settings.add( neuralNet.settings, 'signalMinSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Min Speed' );
 	gui_settings.add( neuralNet.settings, 'signalMaxSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Max Speed' );
 	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );
 	gui_settings.add(  neuralNet.settings, 'trailSizeMult',0.0, 10.0, 0.01  ).name( 'Trail Size Mult' );
+	gui_settings.add(  neuralNet.settings, 'trailHeadOpacity',0.0, 1, 0.01  ).name( 'Trail Head Opacity' );
+	gui_settings.add(  neuralNet.settings, 'trailTailOpacity',0.0, 1, 0.01  ).name( 'Trail Tail Opacity' );
+	gui_settings.add(  neuralNet.settings, 'trailLength',0, 100, 10  ).name( 'Trail Length' ).step(1);
 	gui_settings.addColor( sceneSettings, 'bgColor' ).name( 'Background' );
 	gui_settings.add( neuralNet, 'releaseSignal' ).name( 'Release Signal' );
 	gui_settings.open();

@@ -19,13 +19,12 @@ function Signal( particlePool, minSpeed, maxSpeed ) {
 	// create material for the trail renderer
 	var trailMaterial = THREE.TrailRenderer.createBaseMaterial();	
 	var color = new THREE.Color(this.particle.pColor);
-	var alphaHead  = 0.8;
-	var alphaTail  = 0.1;
+	var alphaHead  = neuralNet.settings.trailHeadOpacity;
+	var alphaTail  = neuralNet.settings.trailTailOpacity;
 	trailMaterial.uniforms.headColor.value.set(color.r,color.g,color.b, alphaHead);
 	trailMaterial.uniforms.tailColor.value.set( color.r,color.g,color.b, alphaTail);
-
 	// specify length of trail
-	var trailLength = 20;
+	var trailLength = neuralNet.settings.trailLength;
 
 	var trailHeadGeometry = [];
 	
@@ -46,6 +45,7 @@ function Signal( particlePool, minSpeed, maxSpeed ) {
 	this.trailRenderer.initialize( trailMaterial, trailLength, false, 0, trailHeadGeometry, this.mesh );
 	this.trailRenderer.activate();
 
+	this.aboutToDie = false;
 }
 
 Signal.prototype = Object.create( THREE.Vector3.prototype );
@@ -61,27 +61,43 @@ Signal.prototype.setConnection = function ( Connection ) {
 
 Signal.prototype.travel = function ( deltaTime ) {
 
+
+
+	if( this.aboutToDie){
+		this.trailRenderer.advance()
+		this.trailRenderer.updateHead()
+		return;
+	}
+
 	var pos;
 	if ( this.startingPoint === 'A' ) {
 		this.t += this.speed * deltaTime;
-		if ( this.t >= 1 ) {
+		if ( this.t >= 1  ) {
 			this.t = 1;
-			this.alive = false;
+			this.aboutToDie = true;
 			this.axon.neuronB.receivedSignal = true;
 			this.axon.neuronB.prevReleaseAxon = this.axon;
-			this.trailRenderer.deactivate();
+			var that = this;
+			setTimeout(function() {
+			        that.trailRenderer.deactivate();
+			        that.alive = false;
 
+			    }, 1000);
 		}
 
 	} else if ( this.startingPoint === 'B' ) {
 		this.t -= this.speed * deltaTime;
 		if ( this.t <= 0 ) {
 			this.t = 0;
-			this.alive = false;
+			this.aboutToDie = true;
 			this.axon.neuronA.receivedSignal = true;
 			this.axon.neuronA.prevReleaseAxon = this.axon;
-			this.trailRenderer.deactivate();
+			var that = this;
+			setTimeout(function() {
+			        that.trailRenderer.deactivate();
+			        that.alive = false;
 
+			    }, 1000);
 		}
 	}
 

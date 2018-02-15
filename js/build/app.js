@@ -99,13 +99,12 @@ function Signal( particlePool, minSpeed, maxSpeed ) {
 	// create material for the trail renderer
 	var trailMaterial = THREE.TrailRenderer.createBaseMaterial();	
 	var color = new THREE.Color(this.particle.pColor);
-	var alphaHead  = 0.8;
-	var alphaTail  = 0.1;
+	var alphaHead  = neuralNet.settings.trailHeadOpacity;
+	var alphaTail  = neuralNet.settings.trailTailOpacity;
 	trailMaterial.uniforms.headColor.value.set(color.r,color.g,color.b, alphaHead);
 	trailMaterial.uniforms.tailColor.value.set( color.r,color.g,color.b, alphaTail);
-
 	// specify length of trail
-	var trailLength = 20;
+	var trailLength = neuralNet.settings.trailLength;
 
 	var trailHeadGeometry = [];
 	
@@ -126,6 +125,7 @@ function Signal( particlePool, minSpeed, maxSpeed ) {
 	this.trailRenderer.initialize( trailMaterial, trailLength, false, 0, trailHeadGeometry, this.mesh );
 	this.trailRenderer.activate();
 
+	this.aboutToDie = false;
 }
 
 Signal.prototype = Object.create( THREE.Vector3.prototype );
@@ -141,27 +141,43 @@ Signal.prototype.setConnection = function ( Connection ) {
 
 Signal.prototype.travel = function ( deltaTime ) {
 
+
+
+	if( this.aboutToDie){
+		this.trailRenderer.advance()
+		this.trailRenderer.updateHead()
+		return;
+	}
+
 	var pos;
 	if ( this.startingPoint === 'A' ) {
 		this.t += this.speed * deltaTime;
-		if ( this.t >= 1 ) {
+		if ( this.t >= 1  ) {
 			this.t = 1;
-			this.alive = false;
+			this.aboutToDie = true;
 			this.axon.neuronB.receivedSignal = true;
 			this.axon.neuronB.prevReleaseAxon = this.axon;
-			this.trailRenderer.deactivate();
+			var that = this;
+			setTimeout(function() {
+			        that.trailRenderer.deactivate();
+			        that.alive = false;
 
+			    }, 1000);
 		}
 
 	} else if ( this.startingPoint === 'B' ) {
 		this.t -= this.speed * deltaTime;
 		if ( this.t <= 0 ) {
 			this.t = 0;
-			this.alive = false;
+			this.aboutToDie = true;
 			this.axon.neuronA.receivedSignal = true;
 			this.axon.neuronA.prevReleaseAxon = this.axon;
-			this.trailRenderer.deactivate();
+			var that = this;
+			setTimeout(function() {
+			        that.trailRenderer.deactivate();
+			        that.alive = false;
 
+			    }, 1000);
 		}
 	}
 
@@ -191,7 +207,7 @@ function ParticlePool( poolSize ) {
 	this.offScreenPos = new THREE.Vector3( 9999, 9999, 9999 );
 
 	this.pColor = '#ffffff';
-	this.pSize = 0.6 *0.1;
+	this.pSize = 0.3;
 
 	for ( var ii = 0; ii < this.poolSize; ii++ ) {
 		this.particles[ ii ] = new Particle( this );
@@ -258,10 +274,10 @@ ParticlePool.prototype.updateSettings = function () {
 
 	// inner particle
 	this.pMat.color.setStyle( this.pColor );
-	this.pMat.size = this.pSize*0.1;
+	this.pMat.size = this.pSize;
 	// outer particle
 	this.pMat_outer.color.setStyle( this.pColor );
-	this.pMat_outer.size = this.pSize *0.1* 1.5;
+	this.pMat_outer.size = this.pSize * 1.5;
 
 };
 
@@ -365,7 +381,10 @@ function NeuralNetwork() {
 		maxNeurons: 3000,
 		neuroSeed: 1000,
 		noiseFreq: 15,
-		trailSizeMult: 1.0
+		trailSizeMult: 1.0,
+		trailLength: 20,
+		trailHeadOpacity: 0.7,
+		trailTailOpacity: 0.1
 
 	};
 
@@ -973,12 +992,15 @@ function initGui() {
 
 	gui_settings = gui.addFolder( 'Settings Signals ' );
 	gui_settings.add( neuralNet.settings, 'currentMaxSignals', 0, neuralNet.settings.limitSignals ).name( 'Max Signals' );
-	gui_settings.add( neuralNet.particlePool, 'pSize', 0.2, 10 ).name( 'Signal Size' );
+	gui_settings.add( neuralNet.particlePool, 'pSize', 0.0, 10 ).name( 'Signal Size' );
 	gui_settings.add( neuralNet.settings, 'amountEmittedSignals', 1, 200 ).name( 'Amount Emitted Signals' );
 	gui_settings.add( neuralNet.settings, 'signalMinSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Min Speed' );
 	gui_settings.add( neuralNet.settings, 'signalMaxSpeed', 0.0, 8.0, 0.01 ).name( 'Signal Max Speed' );
 	gui_settings.addColor( neuralNet.particlePool, 'pColor' ).name( 'Signal Color' );
 	gui_settings.add(  neuralNet.settings, 'trailSizeMult',0.0, 10.0, 0.01  ).name( 'Trail Size Mult' );
+	gui_settings.add(  neuralNet.settings, 'trailHeadOpacity',0.0, 1, 0.01  ).name( 'Trail Head Opacity' );
+	gui_settings.add(  neuralNet.settings, 'trailTailOpacity',0.0, 1, 0.01  ).name( 'Trail Tail Opacity' );
+	gui_settings.add(  neuralNet.settings, 'trailLength',0, 100, 10  ).name( 'Trail Length' ).step(1);
 	gui_settings.addColor( sceneSettings, 'bgColor' ).name( 'Background' );
 	gui_settings.add( neuralNet, 'releaseSignal' ).name( 'Release Signal' );
 	gui_settings.open();

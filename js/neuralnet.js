@@ -27,7 +27,10 @@ function NeuralNetwork() {
 		maxNeurons: 3000,
 		neuroSeed: 1000,
 		noiseFreq: 15,
-		trailSizeMult: 1.0
+		trailSizeMult: 1.0,
+		trailLength: 20,
+		trailHeadOpacity: 0.7,
+		trailTailOpacity: 0.1
 
 	};
 

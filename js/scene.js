@@ -47,7 +47,7 @@ renderer = new THREE.WebGLRenderer( {
 renderer.setSize( WIDTH, HEIGHT );
 renderer.setPixelRatio( pixelRatio );
 renderer.setClearColor( sceneSettings.bgColor, 1 );
-renderer.autoClear = false;
+//renderer.autoClear = false;
 container.appendChild( renderer.domElement );
 
 
@@ -70,9 +70,18 @@ for ( var i = 0; i <= twoPI + inc; i+= inc )  {
 	circlePoints[ index ] = vector;
 	index ++;
 }
+do_render = true;
+TILES = 2;
 
 
-
+document.addEventListener('keydown', function(e) {
+  if (e.key == ' ') {
+    console.log('space');
+    do_render = !do_render;
+  } else if (e.key == 'e') {
+    saveTiles(renderer, scene, camera, TILES);
+  }
+});
 
 function updateHelpers() {
 }

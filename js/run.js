@@ -27,14 +27,12 @@ function run() {
 	update();
 
 
+ 	if (do_render){
 
-    renderer.setClearColor( sceneSettings.bgColor, 1 );
-    renderer.clear();
-	
-
-	//renderer.render( sceneTrail, camera );
-	renderer.render( scene, camera );
-
+	    renderer.setClearColor( sceneSettings.bgColor, 1 );
+		//rendererNet.render( sceneTrail, camera );
+		renderer.render( scene, camera );
+	}
 	stats.update();
 	FRAME_COUNT ++;
 

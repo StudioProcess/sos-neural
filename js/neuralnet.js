@@ -84,7 +84,7 @@ NeuralNetwork.prototype.createNetwork = function () {
 	};
 
 	// neuron
-	this.neuronSizeMultiplier = 1.0;
+	this.neuronSizeMultiplier = 0.3;
 	this.spriteTextureNeuron = TEXTURES.electric;
 	this.neuronColor = '#ffffff';
 	this.neuronOpacity = 0.75;

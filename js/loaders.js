@@ -60,7 +60,7 @@ shaderLoader.loadMultiple( SHADER_CONTAINER, {
 
 var TEXTURES = {};
 var textureLoader = new THREE.TextureLoader( loadingManager );
-textureLoader.load( 'sprites/electric.png', function ( tex ) {
+textureLoader.load( 'sprites/circle.png', function ( tex ) {
 
 	TEXTURES.electric = tex;
 

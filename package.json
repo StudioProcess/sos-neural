@@ -2,6 +2,7 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "browser-sync": "^2.23.6",
     "connect-livereload": "^0.5.2",
     "grunt": "^0.4.5",
     "grunt-babel": "^7.0.0",
@@ -16,5 +17,8 @@
     "jquery": "^2.1.4",
     "ndarray": "^1.0.16",
     "underscore": "^1.8.3"
+  },
+  "scripts": {
+    "start": "browser-sync start --server --port 8080 --files index.html js shaders css"
   }
 }

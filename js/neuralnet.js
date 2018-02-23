@@ -17,7 +17,7 @@ function NeuralNetwork() {
 
 		verticesSkipStep: 1,
 		maxAxonDist: 30,
-		axonThickness: 2,
+		// axonThickness: 2,
 		maxConnectionsPerNeuron: 6,
 		amountEmittedSignals: 2,
 		signalMinSpeed: 0.5,
@@ -62,9 +62,12 @@ NeuralNetwork.prototype.createNetwork = function () {
 
 	// axon
 	this.axonOpacityMultiplier = 0.5;
+	this.axonLineWeight = 0.025;
 	this.axonColor = '#ffffff';
-	this.axonGeom = new THREE.BufferGeometry();
+	this.axonGeom = new THREE.InstancedBufferGeometry();
 	this.axonPositions = [];
+	this.axonEndPositions = [];
+	this.axonEndPositions = [];
 	this.axonIndices = [];
 	this.axonNextPositionsIndex = 0;
 
@@ -76,6 +79,10 @@ NeuralNetwork.prototype.createNetwork = function () {
 		opacityMultiplier: {
 			type: 'f',
 			value: this.axonOpacityMultiplier
+		},
+		axonLineWeight: {
+			type: 'f',
+			value: this.axonLineWeight
 		}
 	};
 
@@ -182,7 +189,7 @@ NeuralNetwork.prototype.createVertices = function () {
 
 NeuralNetwork.prototype.initNeuralNetwork = function () {
 	
-	vertice  = this.createVertices(); 
+	vertice = this.createVertices(); 
 
 
 	this.initNeurons( vertice );
@@ -231,6 +238,8 @@ NeuralNetwork.prototype.initNeurons = function ( inputVertices ) {
 
 NeuralNetwork.prototype.initAxons = function () {
 
+	console.log("check");
+
 	var allNeuronsLength = this.components.neurons.length;
 	for ( var j = 0; j < allNeuronsLength; j++ ) {
 		var n1 = this.components.neurons[ j ];
@@ -251,14 +260,53 @@ NeuralNetwork.prototype.initAxons = function () {
 		console.error( "32bit index buffer not supported!" );
 	}
 
-	var axonIndices = new Uint32Array( this.axonIndices );
-	var axonPositions = new Float32Array( this.axonPositions );
-	var axonOpacities = new Float32Array( this.axonAttributes.opacity.value );
+	// var axonIndices = new Uint32Array( this.axonIndices );
+	// var axonPositions = new Float32Array( this.axonPositions );
+	// var axonEndPositions = new Float32Array( this.axonEndPositions );
 
-	this.axonGeom.setIndex(  new THREE.BufferAttribute( axonIndices, 1 ) );
-	this.axonGeom.addAttribute( 'position', new THREE.BufferAttribute( axonPositions, 3 ) );
-	this.axonGeom.addAttribute( 'opacity', new THREE.BufferAttribute( axonOpacities, 1 ) );
-	this.axonGeom.computeBoundingSphere();
+	// console.log(this.axonIndices);
+
+	// var startPositions = [];
+	// var endPositions = [];
+
+	// for (let i = 0, l = this.axonIndices.length; i < l; i++) {
+	// 	const baseIndex = this.axonIndices[i] * 3;
+
+	// 	for (let j = 0; j < 3; j++) {
+	// 		startPositions.push(this.axonPositions[baseIndex + j]);
+	// 		endPositions.push(this.axonEndPositions[baseIndex + j]);
+	// 	}
+	// }
+
+	// var axonOpacities = new Float32Array( this.axonAttributes.opacity.value );
+
+	this.axonGeom.addAttribute( 'positionStart', new THREE.InstancedBufferAttribute(new Float32Array(this.axonPositions), 3));
+	this.axonGeom.addAttribute( 'positionEnd', new THREE.InstancedBufferAttribute(new Float32Array(this.axonEndPositions), 3));
+	// this.axonGeom.addAttribute( 'positionStart', new THREE.InstancedBufferAttribute(new Float32Array([
+	// 	-50.0, 0.0, 0.0,
+	// 	0.0, -50.0, 0.0,
+	// ]), 3));
+	// this.axonGeom.addAttribute( 'positionEnd', new THREE.InstancedBufferAttribute(new Float32Array([
+	// 	50.0, 0.0, 0.0,
+	// 	0.0, 50.0, 0.0,
+	// ]), 3));
+	this.axonGeom.addAttribute( 'opacity', new THREE.InstancedBufferAttribute(new Float32Array( this.axonAttributes.opacity.value ), 1 ) );
+
+	this.axonGeom.addAttribute("position", new THREE.BufferAttribute(new Float32Array([
+		-1.0, 1.0, 1.0, // TL
+		1.0, 1.0, 1.0, // TR
+		1.0, -1.0, 0.0, // BR
+		-1.0, -1.0, 0.0, // BL
+	]), 3));
+	this.axonGeom.setIndex(new THREE.BufferAttribute(new Uint16Array([
+    0, 1, 3,
+    3, 1, 2
+  ]), 1));
+
+	// console.log(this.axonGeom);
+
+	// this.axonGeom.setIndex(  new THREE.BufferAttribute( axonIndices, 1 ) );
+	// this.axonGeom.computeBoundingSphere();
 
 	this.axonShaderMaterial = new THREE.ShaderMaterial( {
 		uniforms: this.axonUniforms,
@@ -267,10 +315,12 @@ NeuralNetwork.prototype.initAxons = function () {
 		blending: THREE.AdditiveBlending,
 		depthTest: false,
 		transparent: true,
-		linewidth: this.settings.axonThickness
+		linewidth: this.settings.axonThickness,
+		// wireframe: true,
 	} );
 
-	this.axonMesh = new THREE.LineSegments( this.axonGeom, this.axonShaderMaterial );
+	this.axonMesh = new THREE.Mesh( this.axonGeom, this.axonShaderMaterial );
+	this.axonMesh.frustumCulled = false;
 	this.meshComponents.add( this.axonMesh );
 
 
@@ -361,6 +411,9 @@ NeuralNetwork.prototype.constructAxonArrayBuffer = function ( axon ) {
 
 		this.axonPositions.push( vertices[ i ].x, vertices[ i ].y, vertices[ i ].z );
 
+		// also store other position
+		this.axonEndPositions.push( vertices[ 1-i ].x, vertices[ 1-i ].y, vertices[ 1-i ].z );
+
 		if ( i < vertices.length - 1 ) {
 			var idx = this.axonNextPositionsIndex;
 			this.axonIndices.push( idx, idx + 1 );
@@ -421,6 +474,7 @@ NeuralNetwork.prototype.updateSettings = function () {
 
 	this.axonUniforms.color.value.set( this.axonColor );
 	this.axonUniforms.opacityMultiplier.value = this.axonOpacityMultiplier;
+	this.axonUniforms.axonLineWeight.value = this.axonLineWeight;
 	this.axonShaderMaterial.linewidth = this.settings.axonThickness;
 	this.particlePool.updateSettings();
 };

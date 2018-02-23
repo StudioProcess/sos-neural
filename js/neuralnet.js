@@ -16,20 +16,20 @@ function NeuralNetwork() {
 		*/
 
 		verticesSkipStep: 1,
-		maxAxonDist: 30,
+		maxAxonDist: 9,
 		// axonThickness: 2,
 		maxConnectionsPerNeuron: 6,
 		amountEmittedSignals: 2,
-		signalMinSpeed: 0.5,
-		signalMaxSpeed: 0.8,
+		signalMinSpeed: 6.5,
+		signalMaxSpeed: 8.8,
 		currentMaxSignals: 3000,
 		limitSignals: 10000,
-		maxNeurons: 3000,
+		maxNeurons: 5000,
 		neuroSeed: 1000,
-		noiseFreq: 15,
+		noiseFreq: 90,
 		trailSizeMult: 1.0,
 		trailLength: 20,
-		trailHeadOpacity: 0.7,
+		trailHeadOpacity: 5.0,
 		trailTailOpacity: 0.1
 
 	};
@@ -154,9 +154,9 @@ NeuralNetwork.prototype.createVertices = function () {
 
 	var currentAmount = 0
 	noise.seed(this.settings.neuroSeed);
-	var xMax  = 100; 
-	var yMax = 100; 
-	var zMax = 20;
+	var xMax  = 150; 
+	var yMax = 150; 
+	var zMax = 4;
 
 	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
 	var unsuccessfullLoops = 0
@@ -363,9 +363,10 @@ NeuralNetwork.prototype.update = function ( deltaTime ) {
 
 		if ( this.components.allSignals.length < this.settings.currentMaxSignals - this.settings.maxConnectionsPerNeuron ) { // limit total signals currentMaxSignals - maxConnectionsPerNeuron because allSignals can not bigger than particlePool size
 
-			if ( n.receivedSignal && n.firedCount < 8 ) { // Traversal mode
-			//if (n.receivedSignal && (currentTime - n.lastSignalRelease > n.releaseDelay) && n.firedCount < 8)  {	// Random mode
-				// if (n.receivedSignal && !n.fired )  {	// Single propagation mode
+			// if ( n.receivedSignal && n.firedCount < 100 ) { // Traversal mode
+			// if (n.receivedSignal && (currentTime - n.lastSignalRelease > n.releaseDelay) && n.firedCount < 8)  {	// Random mode
+				if (n.receivedSignal && !n.fired )  {	// Single propagation mode
+			// if (n.receivedSignal )  {	// Single propagation mode
 				n.fired = true;
 				n.lastSignalRelease = currentTime;
 				n.releaseDelay = THREE.Math.randInt( 100, 1000 );

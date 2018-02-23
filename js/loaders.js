@@ -44,6 +44,8 @@ shaderLoader.loadMultiple( SHADER_CONTAINER, {
 	axonVert: 'shaders/axon.vert',
 	axonFrag: 'shaders/axon.frag',
 
+	signalVert: 'shaders/signal.vert',
+	signalFrag: 'shaders/signal.frag',
 
 } );
 

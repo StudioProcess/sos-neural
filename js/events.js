@@ -35,10 +35,12 @@ $( function () {
 
 function onWindowResize() {
 
-	WIDTH = window.innerWidth;
-	HEIGHT = window.innerHeight;
+	// WIDTH = window.innerWidth;
+	// HEIGHT = window.innerHeight;
+	WIDTH = 1280;
+	HEIGHT = 800;
 
-	pixelRatio = window.devicePixelRatio || 1;
+	pixelRatio = 2;
 	screenRatio = WIDTH / HEIGHT;
 
 	camera.aspect = screenRatio;

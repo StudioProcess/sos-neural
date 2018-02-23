@@ -6,7 +6,8 @@ function update() {
 
 	if ( !sceneSettings.pause ) {
 
-		var deltaTime = clock.getDelta();
+		// var deltaTime = clock.getDelta();
+		var deltaTime = 1.0 / 30.0;
 		neuralNet.update( deltaTime );
 ;
 		updateGuiInfo();
@@ -18,9 +19,10 @@ function update() {
 
 
 // ----  draw loop
+var frameID;
 function run() {
-
-	requestAnimationFrame( run );
+	cancelAnimationFrame(frameID);
+	frameID = requestAnimationFrame( run );
 	
 	// render trails 
 

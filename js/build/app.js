@@ -1062,8 +1062,10 @@ renderer = new THREE.WebGLRenderer( {
 	alpha: true,
 	preserveDrawingBuffer: true
 } );
+WIDTH = 1280;
+HEIGHT = 800;
 renderer.setSize( WIDTH, HEIGHT );
-renderer.setPixelRatio( pixelRatio );
+renderer.setPixelRatio( 2 );
 renderer.setClearColor( sceneSettings.bgColor, 1 );
 //renderer.autoClear = false;
 container.appendChild( renderer.domElement );
@@ -1098,6 +1100,11 @@ document.addEventListener('keydown', function(e) {
     do_render = !do_render;
   } else if (e.key == 'e') {
     saveTiles(renderer, scene, camera, TILES);
+  } else if (e.key == 'c') {
+    startstopCapture(); // start/stop recording
+  }
+  else if (e.key == 'v') {
+    startstopCapture( {startTime:0, timeLimit:1} ); // record 1 second
   }
 });
 
@@ -1220,7 +1227,8 @@ function update() {
 
 	if ( !sceneSettings.pause ) {
 
-		var deltaTime = clock.getDelta();
+		// var deltaTime = clock.getDelta();
+		var deltaTime = 1.0 / 30.0;
 		neuralNet.update( deltaTime );
 ;
 		updateGuiInfo();
@@ -1232,9 +1240,10 @@ function update() {
 
 
 // ----  draw loop
+var frameID;
 function run() {
-
-	requestAnimationFrame( run );
+	cancelAnimationFrame(frameID);
+	frameID = requestAnimationFrame( run );
 	
 	// render trails 
 
@@ -1246,6 +1255,7 @@ function run() {
 	    renderer.setClearColor( sceneSettings.bgColor, 1 );
 		//rendererNet.render( sceneTrail, camera );
 		renderer.render( scene, camera );
+		updateCapture( renderer );
 	}
 	stats.update();
 	FRAME_COUNT ++;
@@ -1289,10 +1299,12 @@ $( function () {
 
 function onWindowResize() {
 
-	WIDTH = window.innerWidth;
-	HEIGHT = window.innerHeight;
+	// WIDTH = window.innerWidth;
+	// HEIGHT = window.innerHeight;
+	WIDTH = 1280;
+	HEIGHT = 800;
 
-	pixelRatio = window.devicePixelRatio || 1;
+	pixelRatio = 2;
 	screenRatio = WIDTH / HEIGHT;
 
 	camera.aspect = screenRatio;

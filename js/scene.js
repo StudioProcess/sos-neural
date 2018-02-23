@@ -44,8 +44,10 @@ renderer = new THREE.WebGLRenderer( {
 	alpha: true,
 	preserveDrawingBuffer: true
 } );
+WIDTH = 1280;
+HEIGHT = 800;
 renderer.setSize( WIDTH, HEIGHT );
-renderer.setPixelRatio( pixelRatio );
+renderer.setPixelRatio( 2 );
 renderer.setClearColor( sceneSettings.bgColor, 1 );
 //renderer.autoClear = false;
 container.appendChild( renderer.domElement );

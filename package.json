@@ -20,6 +20,7 @@
     "underscore": "^1.8.3"
   },
   "scripts": {
-    "start": "browser-sync start --server --port 8080 --files index.html js shaders css"
+    "start": "open http://localhost:9001; grunt serve",
+    "start-bs": "browser-sync start --server --port 8080 --files index.html js shaders css"
   }
 }

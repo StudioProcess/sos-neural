@@ -309,7 +309,7 @@ function ParticlePool( poolSize ) {
 
 	this.offScreenPos = new THREE.Vector3( 9999, 9999, 9999 );
 
-	this.pColor = '#ffffff';
+	this.pColor = '#fff8c3';
 	this.pSize = 0.3;
 
 	for ( var ii = 0; ii < this.poolSize; ii++ ) {
@@ -477,16 +477,16 @@ function NeuralNetwork() {
 		// axonThickness: 2,
 		maxConnectionsPerNeuron: 6,
 		amountEmittedSignals: 2,
-		signalMinSpeed: 6.5,
-		signalMaxSpeed: 8.8,
+		signalMinSpeed: 2.7,
+		signalMaxSpeed: 5.6,
 		currentMaxSignals: 3000,
 		limitSignals: 10000,
-		maxNeurons: 5000,
+		maxNeurons: 1000,
 		neuroSeed: 1000,
 		noiseFreq: 90,
 		trailSizeMult: 1.0,
 		trailLength: 20,
-		trailHeadOpacity: 5.0,
+		trailHeadOpacity: 0.6,
 		trailTailOpacity: 0.1
 
 	};
@@ -520,7 +520,7 @@ NeuralNetwork.prototype.createNetwork = function () {
 	// axon
 	this.axonOpacityMultiplier = 0.5;
 	this.axonLineWeight = 0.025;
-	this.axonColor = '#ffffff';
+	this.axonColor = '#97a9fa';
 	this.axonGeom = new THREE.InstancedBufferGeometry();
 	this.axonPositions = [];
 	this.axonEndPositions = [];
@@ -585,7 +585,7 @@ NeuralNetwork.prototype.createNetwork = function () {
 	} );
 
 
-	//signals 
+	//signals
 	this.initialReleasePosition = new THREE.Vector3();
 
 	// info api
@@ -611,9 +611,9 @@ NeuralNetwork.prototype.createVertices = function () {
 
 	var currentAmount = 0
 	noise.seed(this.settings.neuroSeed);
-	var xMax  = 150; 
-	var yMax = 150; 
-	var zMax = 4;
+	var xMax  = 140;
+	var yMax = 90;
+	var zMax = 100;
 
 	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
 	var unsuccessfullLoops = 0
@@ -630,7 +630,7 @@ NeuralNetwork.prototype.createVertices = function () {
 			yPos = (0.5 - yRandom) * yMax;
 			zPos = (0.5 - zRandom) * zMax;
 			neurons[currentAmount] = new THREE.Vector3(xPos, yPos, zPos);
-			currentAmount++;		
+			currentAmount++;
 
 		}else{
 			unsuccessfullLoops++;
@@ -645,8 +645,8 @@ NeuralNetwork.prototype.createVertices = function () {
 };
 
 NeuralNetwork.prototype.initNeuralNetwork = function () {
-	
-	vertice = this.createVertices(); 
+
+	vertice = this.createVertices();
 
 
 	this.initNeurons( vertice );
@@ -663,13 +663,13 @@ NeuralNetwork.prototype.initNeuralNetwork = function () {
 };
 
 NeuralNetwork.prototype.initNeurons = function ( inputVertices ) {
-	
+
 	var positions = [];
 	var colors = [];
 	var size = [];
 	var color = new THREE.Color( '#ffffff' );
 
-	
+
 	var i;
 	for ( i = 0; i < inputVertices.length; i++ ) {
 		var pos = inputVertices[ i ];
@@ -800,7 +800,7 @@ NeuralNetwork.prototype.releaseSignal = function ( deltaTime ) {
 			this.releaseSignalAt( selectedNeuron);
 
 		}
-		
+
 
 
 }
@@ -835,7 +835,7 @@ NeuralNetwork.prototype.update = function ( deltaTime ) {
 		n.receivedSignal = false; // if neuron recieved signal but still in delay reset it
 	}
 
-	
+
 	// update and remove dead signals
 	for ( var j = this.components.allSignals.length - 1; j >= 0; j-- ) {
 		var s = this.components.allSignals[ j ];
@@ -1244,14 +1244,15 @@ var frameID;
 function run() {
 	cancelAnimationFrame(frameID);
 	frameID = requestAnimationFrame( run );
-	
-	// render trails 
+
+	// render trails
 
 	update();
 
 
  	if (do_render){
-
+			scene.rotation.z += Math.PI / 180 * 0.01;
+			scene.rotation.y += Math.PI / 180 * 0.001;
 	    renderer.setClearColor( sceneSettings.bgColor, 1 );
 		//rendererNet.render( sceneTrail, camera );
 		renderer.render( scene, camera );

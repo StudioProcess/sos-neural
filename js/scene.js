@@ -80,6 +80,11 @@ document.addEventListener('keydown', function(e) {
     do_render = !do_render;
   } else if (e.key == 'e') {
     saveTiles(renderer, scene, camera, TILES);
+  } else if (e.key == 'c') {
+    startstopCapture(); // start/stop recording
+  }
+  else if (e.key == 'v') {
+    startstopCapture( {startTime:0, timeLimit:1} ); // record 1 second
   }
 });
 

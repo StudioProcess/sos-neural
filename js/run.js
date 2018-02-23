@@ -32,6 +32,7 @@ function run() {
 	    renderer.setClearColor( sceneSettings.bgColor, 1 );
 		//rendererNet.render( sceneTrail, camera );
 		renderer.render( scene, camera );
+		updateCapture( renderer );
 	}
 	stats.update();
 	FRAME_COUNT ++;

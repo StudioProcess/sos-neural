@@ -18,8 +18,8 @@ var FRAME_COUNT = 0;
 var sceneSettings = {
 
 	pause: false,
-	bgColor: 0x111113,
-	trailClearColor: 0x111113,
+	bgColor: SETTINGS.bgColor,
+	trailClearColor: SETTINGS.trailClearColor,
 	enableGridHelper: false,
 	enableAxisHelper: false
 

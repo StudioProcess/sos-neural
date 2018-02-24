@@ -15,25 +15,25 @@ function NeuralNetwork() {
 		limitSignals           : 10000
 		*/
 
-		verticesSkipStep: 1,
-		maxAxonDist: 9,
+		verticesSkipStep: SETTINGS.verticesSkipStep,
+		maxAxonDist: SETTINGS.maxAxonDist,
 		// axonThickness: 2,
-		maxConnectionsPerNeuron: 6,
-		amountEmittedSignals: 2,
-		signalMinSpeed: 2.7,
-		signalMaxSpeed: 5.6,
-		currentMaxSignals: 3000,
-		limitSignals: 10000,
-		maxNeurons: 1000,
-		neuroSeed: 1000,
-		noiseFreq: 90,
-		trailSizeMult: 1.0,
-		trailLength: 20,
-		trailHeadOpacity: 0.6,
-		trailTailOpacity: 0.1,
-		xMax: 140,
-		yMax: 90,
-		zMax: 100,
+		maxConnectionsPerNeuron: SETTINGS.maxConnectionsPerNeuron,
+		amountEmittedSignals: SETTINGS.amountEmittedSignals,
+		signalMinSpeed: SETTINGS.signalMinSpeed,
+		signalMaxSpeed: SETTINGS.signalMaxSpeed,
+		currentMaxSignals: SETTINGS.currentMaxSignals,
+		limitSignals: SETTINGS.limitSignals,
+		maxNeurons: SETTINGS.maxNeurons,
+		neuroSeed: SETTINGS.neuroSeed,
+		noiseFreq: SETTINGS.noiseFreq,
+		trailSizeMult: SETTINGS.trailSizeMult,
+		trailLength: SETTINGS.trailLength,
+		trailHeadOpacity: SETTINGS.trailHeadOpacity,
+		trailTailOpacity: SETTINGS.trailTailOpacity,
+		xMax: SETTINGS.xMax,
+		yMax: SETTINGS.yMax,
+		zMax: SETTINGS.zMax,
 	};
 
 	this.createNetwork();
@@ -64,9 +64,9 @@ NeuralNetwork.prototype.createNetwork = function () {
 	};
 
 	// axon
-	this.axonOpacityMultiplier = 0.5;
-	this.axonLineWeight = 0.025;
-	this.axonColor = '#97a9fa';
+	this.axonOpacityMultiplier = SETTINGS.axonOpacityMultiplier;
+	this.axonLineWeight = SETTINGS.axonLineWeight;
+	this.axonColor = SETTINGS.axonColor;
 	this.axonGeom = new THREE.InstancedBufferGeometry();
 	this.axonPositions = [];
 	this.axonEndPositions = [];
@@ -97,10 +97,10 @@ NeuralNetwork.prototype.createNetwork = function () {
 	};
 
 	// neuron
-	this.neuronSizeMultiplier = 0.3;
+	this.neuronSizeMultiplier = SETTINGS.neuronSizeMultiplier;
 	this.spriteTextureNeuron = TEXTURES.electric;
-	this.neuronColor = '#ffffff';
-	this.neuronOpacity = 0.75;
+	this.neuronColor = SETTINGS.neuronColor;
+	this.neuronOpacity = SETTINGS.neuronOpacity;
 	this.neuronsGeom = new THREE.BufferGeometry();
 
 	this.neuronUniforms = {

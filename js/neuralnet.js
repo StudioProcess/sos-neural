@@ -41,7 +41,8 @@ function NeuralNetwork() {
 
 
 NeuralNetwork.prototype.createNetwork = function () {
-
+	Math.seedrandom(this.settings.neuroSeed);
+	
 	this.initialized = false;
 
 	if( this.meshComponents)

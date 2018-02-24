@@ -487,8 +487,10 @@ function NeuralNetwork() {
 		trailSizeMult: 1.0,
 		trailLength: 20,
 		trailHeadOpacity: 0.6,
-		trailTailOpacity: 0.1
-
+		trailTailOpacity: 0.1,
+		xMax: 140,
+		yMax: 90,
+		zMax: 100,
 	};
 
 	this.createNetwork();
@@ -611,10 +613,10 @@ NeuralNetwork.prototype.createVertices = function () {
 	var neurons  = new Array(this.settings.maxNeurons);
 
 	var currentAmount = 0
-	noise.seed(this.settings.neuroSeed);
-	var xMax  = 140;
-	var yMax = 90;
-	var zMax = 100;
+	// noise.seed(this.settings.neuroSeed);
+	var xMax = this.settings.xMax;
+	var yMax = this.settings.yMax;
+	var zMax = this.settings.zMax;
 
 	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
 	var unsuccessfullLoops = 0
@@ -1189,6 +1191,9 @@ function initGui() {
 		gui_settings.__controllers[ i ].onChange( updateNeuralNetworkSettings );
 	}
 	gui_settings = gui.addFolder( 'Settings Neurons' );
+	gui_settings.add( neuralNet.settings, 'xMax', 10, 300 ).onFinishChange(randomizeSeed);
+	gui_settings.add( neuralNet.settings, 'yMax', 10, 300 ).onFinishChange(randomizeSeed);
+	gui_settings.add( neuralNet.settings, 'zMax', 10, 300 ).onFinishChange(randomizeSeed);
 	gui_settings.add( neuralNet.settings, 'maxNeurons', 0, 10000 ).name( 'Max Neurons' ).step(1);
 	gui_settings.add( neuralNet.settings, 'neuroSeed', 0, 1000 ).name( 'Neuro Seed' ).step(1);
 	gui_settings.add( neuralNet.settings, 'noiseFreq', 0, 100 ).name( 'Noise Frequency' ).step(0.1);
@@ -1218,6 +1223,11 @@ function updateGuiInfo() {
 	for ( var i = 0; i < gui_info.__controllers.length; i++ ) {
 		gui_info.__controllers[ i ].updateDisplay();
 	}
+}
+
+function randomizeSeed() {
+	let c = gui_settings.__controllers.filter(c => c.property == 'neuroSeed')[0];
+	c.setValue(Math.floor(Math.random()*1000));
 }
 
 // Run --------------------------------------------------------

@@ -30,8 +30,10 @@ function NeuralNetwork() {
 		trailSizeMult: 1.0,
 		trailLength: 20,
 		trailHeadOpacity: 0.6,
-		trailTailOpacity: 0.1
-
+		trailTailOpacity: 0.1,
+		xMax: 140,
+		yMax: 90,
+		zMax: 100,
 	};
 
 	this.createNetwork();
@@ -154,10 +156,10 @@ NeuralNetwork.prototype.createVertices = function () {
 	var neurons  = new Array(this.settings.maxNeurons);
 
 	var currentAmount = 0
-	noise.seed(this.settings.neuroSeed);
-	var xMax  = 140;
-	var yMax = 90;
-	var zMax = 100;
+	// noise.seed(this.settings.neuroSeed);
+	var xMax = this.settings.xMax;
+	var yMax = this.settings.yMax;
+	var zMax = this.settings.zMax;
 
 	var probability = 0.0 // probability to choose a vertex //it depends on the noise used
 	var unsuccessfullLoops = 0

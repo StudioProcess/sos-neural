@@ -43,6 +43,9 @@ function initGui() {
 		gui_settings.__controllers[ i ].onChange( updateNeuralNetworkSettings );
 	}
 	gui_settings = gui.addFolder( 'Settings Neurons' );
+	gui_settings.add( neuralNet.settings, 'xMax', 10, 300 ).onFinishChange(randomizeSeed);
+	gui_settings.add( neuralNet.settings, 'yMax', 10, 300 ).onFinishChange(randomizeSeed);
+	gui_settings.add( neuralNet.settings, 'zMax', 10, 300 ).onFinishChange(randomizeSeed);
 	gui_settings.add( neuralNet.settings, 'maxNeurons', 0, 10000 ).name( 'Max Neurons' ).step(1);
 	gui_settings.add( neuralNet.settings, 'neuroSeed', 0, 1000 ).name( 'Neuro Seed' ).step(1);
 	gui_settings.add( neuralNet.settings, 'noiseFreq', 0, 100 ).name( 'Noise Frequency' ).step(0.1);
@@ -72,4 +75,9 @@ function updateGuiInfo() {
 	for ( var i = 0; i < gui_info.__controllers.length; i++ ) {
 		gui_info.__controllers[ i ].updateDisplay();
 	}
+}
+
+function randomizeSeed() {
+	let c = gui_settings.__controllers.filter(c => c.property == 'neuroSeed')[0];
+	c.setValue(Math.floor(Math.random()*1000));
 }

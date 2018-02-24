@@ -87,3 +87,21 @@ a, a:visited {
 		-webkit-transform: scaleY(1.0);
 	}
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: black;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}

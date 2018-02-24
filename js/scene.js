@@ -55,8 +55,8 @@ container.appendChild( renderer.domElement );
 
 
 // ---- Stats
-stats = new Stats();
-container.appendChild( stats.domElement );
+// stats = new Stats();
+// container.appendChild( stats.domElement );
 
 // ---- grid & axis helper
 

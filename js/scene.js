@@ -77,7 +77,12 @@ TILES = 2;
 
 
 document.addEventListener('keydown', function(e) {
-  if (e.key == ' ') {
+	if (e.key == 'f') { // f .. fullscreen
+		if (!document.webkitFullscreenElement) {
+			document.querySelector('body').webkitRequestFullscreen();
+		} else { document.webkitExitFullscreen(); }
+	}
+  else if (e.key == ' ') {
     console.log('space');
     do_render = !do_render;
   } else if (e.key == 'e') {

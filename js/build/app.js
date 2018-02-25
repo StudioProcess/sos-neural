@@ -1,8 +1,49 @@
 !function(t){"use strict";var e=t.HTMLCanvasElement&&t.HTMLCanvasElement.prototype,o=t.Blob&&function(){try{return Boolean(new Blob)}catch(t){return!1}}(),n=o&&t.Uint8Array&&function(){try{return 100===new Blob([new Uint8Array(100)]).size}catch(t){return!1}}(),r=t.BlobBuilder||t.WebKitBlobBuilder||t.MozBlobBuilder||t.MSBlobBuilder,a=/^data:((.*?)(;charset=.*?)?)(;base64)?,/,i=(o||r)&&t.atob&&t.ArrayBuffer&&t.Uint8Array&&function(t){var e,i,l,u,c,f,b,d,B;if(!(e=t.match(a)))throw new Error("invalid data URI");for(i=e[2]?e[1]:"text/plain"+(e[3]||";charset=US-ASCII"),l=!!e[4],u=t.slice(e[0].length),c=l?atob(u):decodeURIComponent(u),f=new ArrayBuffer(c.length),b=new Uint8Array(f),d=0;d<c.length;d+=1)b[d]=c.charCodeAt(d);return o?new Blob([n?b:f],{type:i}):((B=new r).append(f),B.getBlob(i))};t.HTMLCanvasElement&&!e.toBlob&&(e.mozGetAsFile?e.toBlob=function(t,o,n){var r=this;setTimeout(function(){t(n&&e.toDataURL&&i?i(r.toDataURL(o,n)):r.mozGetAsFile("blob",o))})}:e.toDataURL&&i&&(e.toBlob=function(t,e,o){var n=this;setTimeout(function(){t(i(n.toDataURL(e,o)))})})),"function"==typeof define&&define.amd?define(function(){return i}):"object"==typeof module&&module.exports?module.exports=i:t.dataURLtoBlob=i}(window);
 //# sourceMappingURL=canvas-to-blob.min.js.map
-// Initial Settings 
+// Initial Settings
 
 var SETTINGS = {
+
+	verticesSkipStep: 1,
+	maxAxonDist: 31.9,
+	// axonThickness: 2,
+	maxConnectionsPerNeuron: 35,
+	amountEmittedSignals: 2,
+	signalMinSpeed: 2.7,
+	signalMaxSpeed: 5.6,
+	currentMaxSignals: 3000,
+	limitSignals: 3000,
+	maxNeurons: 599,
+	neuroSeed: 579,
+	noiseFreq: 27,
+	trailSizeMult: 0.32,
+	trailLength: 20,
+	trailHeadOpacity: 0.6,
+	trailTailOpacity: 0.1,
+	xMax: 140,
+	yMax: 90,
+	zMax: 100,
+
+	axonColor: '#97a9fa',
+	axonLineWeight: 0.025,
+	axonOpacityMultiplier: 0.8,
+
+	// signals
+	pColor: '#fff8c3',
+	pSize: 0.3,
+
+	//neuron
+	neuronSizeMultiplier: 0.32,
+	neuronColor: '#ffffff',
+	neuronOpacity: 0.75,
+
+	// scene
+	bgColor: 0x111113,
+	trailClearColor: 0x111113,
+
+
+	/**
+	// OLD Settings
 	verticesSkipStep: 1,
 	maxAxonDist: 9,
 	// axonThickness: 2,
@@ -22,23 +63,24 @@ var SETTINGS = {
 	xMax: 140,
 	yMax: 90,
 	zMax: 100,
-	
+
 	axonColor: '#97a9fa',
 	axonLineWeight: 0.025,
 	axonOpacityMultiplier: 0.5,
-	
+
 	// signals
 	pColor: '#fff8c3',
 	pSize: 0.3,
-	
+
 	//neuron
 	neuronSizeMultiplier: 0.3,
 	neuronColor: '#ffffff',
 	neuronOpacity: 0.75,
-	
+
 	// scene
 	bgColor: 0x111113,
 	trailClearColor: 0x111113,
+	**/
 };
 
 // Neuron ----------------------------------------------------------------

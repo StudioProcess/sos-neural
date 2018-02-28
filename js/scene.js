@@ -35,7 +35,7 @@ sceneScreen = new THREE.Scene();
 camera = new THREE.PerspectiveCamera( 75, screenRatio, 10, 5000 );
 // camera orbit control
 cameraCtrl = new THREE.OrbitControls( camera, container );
-cameraCtrl.object.position.z = 150;
+cameraCtrl.object.position.z = 40;
 cameraCtrl.update();
 
 // ---- Renderer
@@ -93,6 +93,9 @@ document.addEventListener('keydown', function(e) {
   else if (e.key == 'v') {
     startstopCapture( {startTime:0, timeLimit:1} ); // record 1 second
   }
+	else if (e.key == 's') {
+		neuralNet.releaseSignal();
+	}
 });
 
 function updateHelpers() {

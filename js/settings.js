@@ -7,20 +7,20 @@ var SETTINGS = {
 	// fehlt: axons
 
 	// settings signals
-	currentMaxSignals: 3000,
-	limitSignals: 3000,
-	amountEmittedSignals: 2,
+	currentMaxSignals: 30000,
+	limitSignals: 30000,
+	amountEmittedSignals: 300,
 	signalMinSpeed: 1.7,
 	signalMaxSpeed: 2.6,
 	pColor: '#fff8c3',
-	trailHeadOpacity: 0.6,
+	trailHeadOpacity: 0.2,
 	trailTailOpacity: 0.1,
 	bgColor: 0x111113,
 
 	// settings connections
 	maxAxonDist: 9,
 	maxConnectionsPerNeuron: 6,
-	axonOpacityMultiplier: 0.5,
+	axonOpacityMultiplier: 0.2,
 	axonLineWeight: 0.055,
 	axonColor: '#97a9fa',
 
@@ -32,7 +32,7 @@ var SETTINGS = {
 	neuroSeed: 1000,
 	noiseFreq: 90,
 	neuronSizeMultiplier: 0.3,
-	neuronOpacity: 0.75,
+	neuronOpacity: 0.25,
 	neuronColor: '#ffffff',
 
 	// else
@@ -41,6 +41,8 @@ var SETTINGS = {
 	trailSizeMult: 0.32,
 	verticesSkipStep: 1,
 	trailLength: 20,
+
+	loop_period: 10
 
 	// OLD Settings #2
 	// // info

@@ -91,7 +91,7 @@ document.addEventListener('keydown', function(e) {
     startstopCapture(); // start/stop recording
   }
   else if (e.key == 'v') {
-    startstopCapture( {startTime:0, timeLimit:1} ); // record 1 second
+    startstopCapture( { startTime:0, timeLimit: SETTINGS.loop_period } ); // record 1 cycle
   }
 	else if (e.key == 's') {
 		neuralNet.releaseSignal();

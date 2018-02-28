@@ -9,20 +9,20 @@ var SETTINGS = {
 	// fehlt: axons
 
 	// settings signals
-	currentMaxSignals: 3000,
-	limitSignals: 3000,
-	amountEmittedSignals: 2,
+	currentMaxSignals: 30000,
+	limitSignals: 30000,
+	amountEmittedSignals: 300,
 	signalMinSpeed: 1.7,
 	signalMaxSpeed: 2.6,
 	pColor: '#fff8c3',
-	trailHeadOpacity: 0.6,
+	trailHeadOpacity: 0.2,
 	trailTailOpacity: 0.1,
 	bgColor: 0x111113,
 
 	// settings connections
 	maxAxonDist: 9,
 	maxConnectionsPerNeuron: 6,
-	axonOpacityMultiplier: 0.5,
+	axonOpacityMultiplier: 0.2,
 	axonLineWeight: 0.055,
 	axonColor: '#97a9fa',
 
@@ -34,7 +34,7 @@ var SETTINGS = {
 	neuroSeed: 1000,
 	noiseFreq: 90,
 	neuronSizeMultiplier: 0.3,
-	neuronOpacity: 0.75,
+	neuronOpacity: 0.25,
 	neuronColor: '#ffffff',
 
 	// else
@@ -43,6 +43,8 @@ var SETTINGS = {
 	trailSizeMult: 0.32,
 	verticesSkipStep: 1,
 	trailLength: 20,
+
+	loop_period: 10
 
 	// OLD Settings #2
 	// // info
@@ -1240,7 +1242,7 @@ document.addEventListener('keydown', function(e) {
     startstopCapture(); // start/stop recording
   }
   else if (e.key == 'v') {
-    startstopCapture( {startTime:0, timeLimit:1} ); // record 1 second
+    startstopCapture( { startTime:0, timeLimit: SETTINGS.loop_period } ); // record 1 cycle
   }
 	else if (e.key == 's') {
 		neuralNet.releaseSignal();
@@ -1388,32 +1390,19 @@ function update() {
 
 // ----  draw loop
 var frameID;
-let radius = 100;
-let loop_period = 10;
 function run( time ) {
-	let angle = (time/1000 / loop_period) * 2*Math.PI;
+	let angle = (time/1000 / SETTINGS.loop_period) * 2*Math.PI;
 	cancelAnimationFrame(frameID);
 	frameID = requestAnimationFrame( run );
-
-	// render trails
-
 	update();
 
-
  	if (do_render){
-			// scene.rotation.z += Math.PI / 180 * 0.01;
-			// scene.rotation.y += Math.PI / 180 * 0.001;
+		scene.rotation.z = Math.sin( angle ) * 0.01;
+		scene.rotation.y = Math.cos( angle ) * 0.01;
 
-			scene.rotation.z = Math.sin( angle ) * 0.1;
-			scene.rotation.y = Math.cos( angle ) * 0.1;
-
-			//
-			// cameraCtrl.object.position.x = cos( * r);
-			// cameraCtrl.object.position.x = sin(winkel * r);
-
-	    renderer.setClearColor( sceneSettings.bgColor, 1 );
-		//rendererNet.render( sceneTrail, camera );
+    renderer.setClearColor( sceneSettings.bgColor, 1 );
 		renderer.render( scene, camera );
+
 		updateCapture( renderer );
 	}
 	// stats.update();

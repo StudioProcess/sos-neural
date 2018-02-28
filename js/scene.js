@@ -88,10 +88,10 @@ document.addEventListener('keydown', function(e) {
   } else if (e.key == 'e') {
     saveTiles(renderer, scene, camera, TILES);
   } else if (e.key == 'c') {
-    startstopCapture(); // start/stop recording
+    recorder.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
-    startstopCapture( {startTime:0, timeLimit:1} ); // record 1 second
+    recorder.startstop( {start:0, duration:5} ); // record 1 second
   }
 	else if (e.key == 's') {
 		neuralNet.releaseSignal();

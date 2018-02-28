@@ -1237,10 +1237,10 @@ document.addEventListener('keydown', function(e) {
   } else if (e.key == 'e') {
     saveTiles(renderer, scene, camera, TILES);
   } else if (e.key == 'c') {
-    startstopCapture(); // start/stop recording
+    recorder.startstop(); // start/stop recording
   }
   else if (e.key == 'v') {
-    startstopCapture( {startTime:0, timeLimit:1} ); // record 1 second
+    recorder.startstop( {start:0, duration:5} ); // record 1 second
   }
 	else if (e.key == 's') {
 		neuralNet.releaseSignal();
@@ -1389,7 +1389,7 @@ function update() {
 // ----  draw loop
 var frameID;
 let radius = 100;
-let loop_period = 10;
+let loop_period = 5;
 function run( time ) {
 	let angle = (time/1000 / loop_period) * 2*Math.PI;
 	cancelAnimationFrame(frameID);
@@ -1414,7 +1414,7 @@ function run( time ) {
 	    renderer.setClearColor( sceneSettings.bgColor, 1 );
 		//rendererNet.render( sceneTrail, camera );
 		renderer.render( scene, camera );
-		updateCapture( renderer );
+		recorder.update( renderer );
 	}
 	// stats.update();
 	FRAME_COUNT ++;

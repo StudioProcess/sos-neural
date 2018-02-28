@@ -79,6 +79,8 @@ module.exports = function ( grunt ) {
 	// tasks
 	grunt.registerTask( 'default', [ 'watch' ] );
 	grunt.registerTask( 'serve', [ 'connect:server', 'watch' ] );
-	grunt.registerTask( 'build', [  'concat:build', 'uglify:build' ] );
-	grunt.registerTask( 'vendor', [ 'concat:vendor', 'uglify:vendor' ] );
+	// grunt.registerTask( 'build', [  'concat:build', 'uglify:build' ] );
+	// grunt.registerTask( 'vendor', [ 'concat:vendor', 'uglify:vendor' ] );
+	grunt.registerTask( 'build', [  'concat:build' ] );
+	grunt.registerTask( 'vendor', [ 'concat:vendor' ] );
 };

@@ -21,7 +21,7 @@ function update() {
 // ----  draw loop
 var frameID;
 let radius = 100;
-let loop_period = 10;
+let loop_period = 5;
 function run( time ) {
 	let angle = (time/1000 / loop_period) * 2*Math.PI;
 	cancelAnimationFrame(frameID);
@@ -46,7 +46,7 @@ function run( time ) {
 	    renderer.setClearColor( sceneSettings.bgColor, 1 );
 		//rendererNet.render( sceneTrail, camera );
 		renderer.render( scene, camera );
-		updateCapture( renderer );
+		recorder.update( renderer );
 	}
 	// stats.update();
 	FRAME_COUNT ++;

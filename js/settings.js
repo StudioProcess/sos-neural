@@ -1,27 +1,26 @@
 // Initial Settings
 
 var SETTINGS = {
-
 	// info
-	maxNeurons: 2596, // 2596
+	maxNeurons: 1000, // 2596
 	// fehlt: axons
 
 	// settings signals
 	currentMaxSignals: 30000,
 	limitSignals: 30000,
-	amountEmittedSignals: 300,
-	signalMinSpeed: 1.7,
-	signalMaxSpeed: 2.6,
+	amountEmittedSignals: 2,
+	signalMinSpeed: 2.7,
+	signalMaxSpeed: 5.6,
 	pColor: '#fff8c3',
-	trailHeadOpacity: 0.2,
+	trailHeadOpacity: 0.3,
 	trailTailOpacity: 0.1,
 	bgColor: 0x111113,
 
 	// settings connections
-	maxAxonDist: 9,
+	maxAxonDist: 16.3,
 	maxConnectionsPerNeuron: 6,
 	axonOpacityMultiplier: 0.2,
-	axonLineWeight: 0.055,
+	axonLineWeight: 0.065,
 	axonColor: '#97a9fa',
 
 	// settings neurons
@@ -43,6 +42,49 @@ var SETTINGS = {
 	trailLength: 20,
 
 	loop_period: 10
+
+	//OLD
+	// // info
+	// maxNeurons: 2596, // 2596
+	// // fehlt: axons
+	//
+	// // settings signals
+	// currentMaxSignals: 30000,
+	// limitSignals: 30000,
+	// amountEmittedSignals: 3,
+	// signalMinSpeed: 1.7,
+	// signalMaxSpeed: 2.6,
+	// pColor: '#fff8c3',
+	// trailHeadOpacity: 0.2,
+	// trailTailOpacity: 0.1,
+	// bgColor: 0x111113,
+	//
+	// // settings connections
+	// maxAxonDist: 9,
+	// maxConnectionsPerNeuron: 6,
+	// axonOpacityMultiplier: 0.2,
+	// axonLineWeight: 0.055,
+	// axonColor: '#97a9fa',
+	//
+	// // settings neurons
+	// xMax: 140,
+	// yMax: 90,
+	// zMax: 90,
+	// // max neurons: see info
+	// neuroSeed: 1000,
+	// noiseFreq: 90,
+	// neuronSizeMultiplier: 0.3,
+	// neuronOpacity: 0.25,
+	// neuronColor: '#ffffff',
+	//
+	// // else
+	// pSize: 0.3,
+	// trailClearColor: 0x111113,
+	// trailSizeMult: 0.32,
+	// verticesSkipStep: 1,
+	// trailLength: 20,
+	//
+	// loop_period: 10
 
 	// OLD Settings #2
 	// // info
